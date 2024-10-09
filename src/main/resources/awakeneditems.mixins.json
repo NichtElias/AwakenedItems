@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "party.elias.awakeneditems.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "awakeneditems.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
