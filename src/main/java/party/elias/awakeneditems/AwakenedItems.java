@@ -85,79 +85,11 @@ public class AwakenedItems {
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public AwakenedItems(IEventBus modEventBus, ModContainer modContainer) {
-        // Register the commonSetup method for modloading
-        modEventBus.addListener(this::commonSetup);
 
-        // Register the Deferred Register to the mod event bus so blocks get registered
         BLOCKS.register(modEventBus);
-        // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus);
-        // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
-
         DATA_COMPONENTS.register(modEventBus);
-
-        // Register ourselves for server and other game events we are interested in.
-        // Note that this is necessary if and only if we want *this* class (Awakeneditems) to respond directly to events.
-        // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
-        NeoForge.EVENT_BUS.register(this);
-    }
-
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        // Some common setup code
-        LOGGER.info("HELLO FROM COMMON SETUP");
-    }
-
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        // Do something when the server starts
-        LOGGER.info("HELLO from server starting");
-    }
-
-    @SubscribeEvent
-    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getItemStack().is(SOULSTUFF_ITEM) && event.getLevel().getBlockState(event.getPos()).is(Blocks.ANVIL)) {
-            List<ItemEntity> itemEntities = event.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(event.getPos().above()));
-
-            for (ItemEntity itemEntity: itemEntities) {
-                if (!itemEntity.getItem().has(AWAKENED_ITEM_COMPONENT)) {
-                    itemEntity.getItem().set(AWAKENED_ITEM_COMPONENT, new AwakenedItemData(0, 0));
-                    event.getItemStack().shrink(1);
-
-                    //  flair
-                    if (event.getLevel().isClientSide()) {
-                        double x = itemEntity.getX();
-                        double y = itemEntity.getY() + 0.25;
-                        double z = itemEntity.getZ();
-
-                        for (int i = 0; i < 20; i++) {
-                            event.getLevel().addParticle(ParticleTypes.SOUL, x, y, z, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05);
-                        }
-
-                        event.getLevel().playLocalSound(event.getPos(), SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.75f, 1, false);
-                        event.getLevel().playLocalSound(event.getPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1, 1, false);
-                    }
-
-                    event.setCanceled(true);
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onItemAttributeModifier(ItemAttributeModifierEvent event) {
-        if (event.getItemStack().has(AWAKENED_ITEM_COMPONENT)) {
-            if (event.getItemStack().is(Tags.Items.MELEE_WEAPON_TOOLS)) {
-                event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(
-                            ResourceLocation.fromNamespaceAndPath(MODID, "ai.attack_damage"),
-                            event.getItemStack().get(AWAKENED_ITEM_COMPONENT).level(),
-                            AttributeModifier.Operation.ADD_VALUE
-                        ),
-                        EquipmentSlotGroup.MAINHAND
-                );
-            }
-        }
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
@@ -168,6 +100,15 @@ public class AwakenedItems {
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+        }
+    }
+
+    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
+    public static class CommonModEvents {
+        @SubscribeEvent
+        public static void commonSetup(final FMLCommonSetupEvent event) {
+            // Some common setup code
+            LOGGER.info("HELLO FROM COMMON SETUP");
         }
     }
 }
