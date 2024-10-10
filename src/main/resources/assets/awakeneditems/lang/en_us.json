@@ -1,4 +1,5 @@
 {
   "itemGroup.awakeneditems": "Awakened Items",
-  "item.awakeneditems.soulstuff": "Soulstuff"
+  "item.awakeneditems.soulstuff": "Soulstuff",
+  "ai.awakeneditems.tooltip": "Awakened [%s]"
 }
