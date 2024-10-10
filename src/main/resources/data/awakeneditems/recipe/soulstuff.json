@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "SNS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:soul_sand"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "result": {
+    "id": "awakeneditems:soulstuff"
+  }
+}
