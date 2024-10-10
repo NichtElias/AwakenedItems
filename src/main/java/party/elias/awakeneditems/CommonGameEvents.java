@@ -88,7 +88,7 @@ public class CommonGameEvents {
         if (event.getSource().getWeaponItem() != null) {
             ItemStack weapon = event.getSource().getWeaponItem();
             if (weapon.has(AwakenedItems.AWAKENED_ITEM_COMPONENT) && weapon.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
-                weapon.update(AwakenedItems.AWAKENED_ITEM_COMPONENT.get(), AwakenedItemData.DEFAULT, comp -> comp.addXp(1).checkLevelUp(event.getEntity().level(), weapon));
+                AwakenedItemBehavior.addXp(weapon, 1, event.getEntity().level());
             }
         }
     }
