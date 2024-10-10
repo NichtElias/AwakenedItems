@@ -1,6 +1,7 @@
 package party.elias.awakeneditems;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -74,12 +75,23 @@ public class CommonGameEvents {
 
     @SubscribeEvent
     public static void onItemTooltip(ItemTooltipEvent event) {
-        if (event.getItemStack().has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
+        AwakenedItemData aiData = event.getItemStack().get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+        if (aiData != null) {
             event.getToolTip().add(
                     Component.translatable("ai.awakeneditems.tooltip",
-                            event.getItemStack().get(AwakenedItems.AWAKENED_ITEM_COMPONENT).level()
+                            aiData.level()
                     ).withStyle(ChatFormatting.AQUA)
             );
+            if (event.getContext().level() != null && event.getContext().level().getPlayerByUUID(aiData.getOwner()) != null) {
+                event.getToolTip().add(
+                        Component.translatable("ai.awakeneditems.tooltip.owner", event.getContext().level().getPlayerByUUID(aiData.getOwner()).getDisplayName())
+                                .withStyle(ChatFormatting.DARK_AQUA)
+                );
+            } else {
+                event.getToolTip().add(
+                        Component.translatable("ai.awakeneditems.tooltip.owner", "???").withStyle(ChatFormatting.DARK_AQUA)
+                );
+            }
         }
     }
 
