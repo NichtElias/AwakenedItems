@@ -1,5 +1,7 @@
 {
   "itemGroup.awakeneditems": "Awakened Items",
   "item.awakeneditems.soulstuff": "Soulstuff",
-  "ai.awakeneditems.tooltip": "Awakened [%s]"
+  "ai.awakeneditems.tooltip": "Awakened [%s]",
+
+  "chat.awakeneditems.aimsg.levelup": "I'm level %s now!"
 }

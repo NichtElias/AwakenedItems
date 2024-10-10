@@ -17,6 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -48,7 +49,7 @@ public class CommonGameEvents {
 
             for (ItemEntity itemEntity: itemEntities) {
                 if (!itemEntity.getItem().has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
-                    itemEntity.getItem().set(AwakenedItems.AWAKENED_ITEM_COMPONENT, new AwakenedItemData(0, 0));
+                    itemEntity.getItem().set(AwakenedItems.AWAKENED_ITEM_COMPONENT, new AwakenedItemData(event.getEntity().getUUID()));
                     event.getItemStack().shrink(1);
 
                     //  flair
@@ -79,6 +80,16 @@ public class CommonGameEvents {
                             event.getItemStack().get(AwakenedItems.AWAKENED_ITEM_COMPONENT).level()
                     ).withStyle(ChatFormatting.AQUA)
             );
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAttack(LivingIncomingDamageEvent event) {
+        if (event.getSource().getWeaponItem() != null) {
+            ItemStack weapon = event.getSource().getWeaponItem();
+            if (weapon.has(AwakenedItems.AWAKENED_ITEM_COMPONENT) && weapon.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
+                weapon.update(AwakenedItems.AWAKENED_ITEM_COMPONENT.get(), AwakenedItemData.DEFAULT, comp -> comp.addXp(1).checkLevelUp(event.getEntity().level(), weapon));
+            }
         }
     }
 }
