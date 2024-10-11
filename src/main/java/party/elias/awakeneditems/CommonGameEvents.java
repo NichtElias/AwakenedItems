@@ -3,11 +3,14 @@ package party.elias.awakeneditems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageType;
@@ -16,7 +19,9 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -27,6 +32,7 @@ import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
 
@@ -35,11 +41,23 @@ public class CommonGameEvents {
 
     @SubscribeEvent
     public static void onItemAttributeModifier(ItemAttributeModifierEvent event) {
-        if (event.getItemStack().has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
-            if (event.getItemStack().is(Tags.Items.MELEE_WEAPON_TOOLS)) {
+        ItemStack item = event.getItemStack();
+        if (item.has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
+            if (item.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
                 event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(
                                 ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.attack_damage"),
-                                event.getItemStack().get(AwakenedItems.AWAKENED_ITEM_COMPONENT).level(),
+                                item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT).level(),
+                                AttributeModifier.Operation.ADD_VALUE
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                );
+            }
+            if (item.is(Tags.Items.TOOLS)
+                    && (!item.is(Tags.Items.MELEE_WEAPON_TOOLS) || item.is(ItemTags.AXES))
+                    && !item.is(Tags.Items.RANGED_WEAPON_TOOLS)) {
+                event.addModifier(Attributes.BLOCK_BREAK_SPEED, new AttributeModifier(
+                                ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.mining_speed"),
+                                (double) item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT).level() / 10.0,
                                 AttributeModifier.Operation.ADD_VALUE
                         ),
                         EquipmentSlotGroup.MAINHAND
