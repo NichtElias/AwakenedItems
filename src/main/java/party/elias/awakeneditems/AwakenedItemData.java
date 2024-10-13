@@ -6,8 +6,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 
 import java.util.UUID;
 
@@ -33,18 +31,6 @@ public record AwakenedItemData(int level, int xp, UUID owner) {
     );
 
     public static final AwakenedItemData DEFAULT = new AwakenedItemData(0, 0, UUID.fromString("0-0-0-0-0"));
-
-    public int getLevel() {
-        return level;
-    }
-
-    public int getXp() {
-        return xp;
-    }
-
-    public UUID getOwner() {
-        return owner;
-    }
 
     public AwakenedItemData withLevel(int level) {
         return new AwakenedItemData(level, xp, owner);

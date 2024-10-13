@@ -15,10 +15,10 @@ public class AwakenedItemBehavior {
         AwakenedItemData data = stack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         if (data != null) {
-            data = data.withXp(data.getXp() + amount);
+            data = data.withXp(data.xp() + amount);
 
-            while (data.getXp() >= getRequiredXp(data.getLevel())) {
-                data = data.withXp(data.getXp() - getRequiredXp(data.getLevel())).withLevel(data.getLevel() + 1);
+            while (data.xp() >= getRequiredXp(data.level())) {
+                data = data.withXp(data.xp() - getRequiredXp(data.level())).withLevel(data.level() + 1);
 
                 stack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, data);
                 onItemLevelUp(stack, data, world);
@@ -30,10 +30,14 @@ public class AwakenedItemBehavior {
 
     public static void onItemLevelUp(ItemStack stack, AwakenedItemData aiData, Level world) {
         if (!world.isClientSide()) {
-            Player owner = world.getPlayerByUUID(aiData.getOwner());
+            Player owner = world.getPlayerByUUID(aiData.owner());
             if (owner != null) {
-                owner.sendSystemMessage(Utils.formattedItemChatMessage(stack, Component.translatable("chat.awakeneditems.aimsg.levelup", aiData.getLevel())));
+                owner.sendSystemMessage(formattedItemChatMessage(stack, Component.translatable("chat.awakeneditems.aimsg.levelup", aiData.level())));
             }
         }
+    }
+
+    public static Component formattedItemChatMessage(ItemStack itemStack, Component message) {
+        return Component.literal("<").append(itemStack.getDisplayName()).append(Component.literal("> ")).append(message);
     }
 }
