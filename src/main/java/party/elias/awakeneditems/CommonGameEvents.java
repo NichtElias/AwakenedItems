@@ -32,6 +32,7 @@ import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
@@ -127,6 +128,19 @@ public class CommonGameEvents {
             ItemStack weapon = event.getSource().getWeaponItem();
             if (weapon.has(AwakenedItems.AWAKENED_ITEM_COMPONENT) && weapon.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
                 AwakenedItemBehavior.addXp(weapon, 1, event.getEntity().level());
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBreakBlock(BlockEvent.BreakEvent event) {
+        ItemStack item = event.getPlayer().getMainHandItem();
+
+        if (item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT) != null) {
+            if (item.is(Tags.Items.TOOLS)
+                && (!item.is(Tags.Items.MELEE_WEAPON_TOOLS) || item.is(ItemTags.AXES))
+                && !item.is(Tags.Items.RANGED_WEAPON_TOOLS)) {
+                AwakenedItemBehavior.addXp(item, 1, event.getPlayer().level());
             }
         }
     }
