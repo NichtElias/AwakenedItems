@@ -9,11 +9,16 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -24,10 +29,14 @@ import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import java.util.List;
 
@@ -164,6 +173,24 @@ public class CommonGameEvents {
     public static void onItemExpire(ItemExpireEvent event) {
         if (event.getEntity().getItem().has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
             event.getEntity().setUnlimitedLifetime();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityTick(EntityTickEvent.Post event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof LivingEntity living) {
+            for (EquipmentSlot slot: EquipmentSlot.values()) {
+                ItemStack item = living.getItemBySlot(slot);
+                AwakenedItemData awakenedItemData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+
+                if (awakenedItemData != null) {
+                    if (living.getUUID() != awakenedItemData.owner()) {
+                        living.hurt(new DamageSource(entity.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)),
+                                1 + ((float)awakenedItemData.level() / 2));
+                    }
+                }
+            }
         }
     }
 }
