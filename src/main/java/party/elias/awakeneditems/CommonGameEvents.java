@@ -1,6 +1,7 @@
 package party.elias.awakeneditems;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,13 +20,14 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
@@ -69,13 +71,16 @@ public class CommonGameEvents {
 
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getItemStack().is(AwakenedItems.SOULSTUFF_ITEM) && event.getLevel().getBlockState(event.getPos()).is(Blocks.ANVIL)) {
+        ItemStack item = event.getItemStack();
+
+        // awakening item
+        if (item.is(AwakenedItems.SOULSTUFF_ITEM) && event.getLevel().getBlockState(event.getPos()).is(Blocks.ANVIL)) {
             List<ItemEntity> itemEntities = event.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(event.getPos().above()));
 
             for (ItemEntity itemEntity: itemEntities) {
                 if (!itemEntity.getItem().has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
                     itemEntity.getItem().set(AwakenedItems.AWAKENED_ITEM_COMPONENT, new AwakenedItemData(event.getEntity().getUUID()));
-                    event.getItemStack().shrink(1);
+                    item.shrink(1);
 
                     //  flair
                     if (event.getLevel().isClientSide()) {
@@ -95,6 +100,24 @@ public class CommonGameEvents {
                                     .getHolderOrThrow(DamageTypes.GENERIC)), 1); // represents binding it to yourself
 
                     event.setCanceled(true);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBlockToolModification(BlockEvent.BlockToolModificationEvent event) {
+        if (!event.isSimulated()) {
+            ItemStack item = event.getHeldItemStack();
+
+            if (item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT) != null) {
+                ItemAbility ability = event.getItemAbility();
+                if (ability == ItemAbilities.SHOVEL_FLATTEN || ability == ItemAbilities.SHOVEL_DOUSE
+                        || ability == ItemAbilities.AXE_STRIP || ability == ItemAbilities.AXE_SCRAPE || ability == ItemAbilities.AXE_WAX_OFF
+                        || ability == ItemAbilities.HOE_TILL
+                        || ability == ItemAbilities.FIRESTARTER_LIGHT
+                        || ability == ItemAbilities.SHEARS_TRIM) {
+                    AwakenedItemBehavior.addXp(item, 1, event.getContext().getLevel());
                 }
             }
         }
