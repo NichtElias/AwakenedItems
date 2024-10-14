@@ -19,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -46,26 +47,29 @@ public class CommonGameEvents {
     @SubscribeEvent
     public static void onItemAttributeModifier(ItemAttributeModifierEvent event) {
         ItemStack item = event.getItemStack();
-        if (item.has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
-            if (item.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
-                event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(
-                                ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.attack_damage"),
-                                item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT).level(),
-                                AttributeModifier.Operation.ADD_VALUE
-                        ),
-                        EquipmentSlotGroup.MAINHAND
-                );
-            }
-            if (item.is(Tags.Items.TOOLS)
-                    && (!item.is(Tags.Items.MELEE_WEAPON_TOOLS) || item.is(ItemTags.AXES))
-                    && !item.is(Tags.Items.RANGED_WEAPON_TOOLS)) {
-                event.addModifier(Attributes.BLOCK_BREAK_SPEED, new AttributeModifier(
-                                ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.mining_speed"),
-                                (double) item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT).level() / 10.0,
-                                AttributeModifier.Operation.ADD_VALUE
-                        ),
-                        EquipmentSlotGroup.MAINHAND
-                );
+        AwakenedItemData aiData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+        if (aiData != null) {
+            if (aiData.heldByOwner()) {
+                if (item.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
+                    event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.attack_damage"),
+                                    aiData.level(),
+                                    AttributeModifier.Operation.ADD_VALUE
+                            ),
+                            EquipmentSlotGroup.MAINHAND
+                    );
+                }
+                if (item.is(Tags.Items.TOOLS)
+                        && (!item.is(Tags.Items.MELEE_WEAPON_TOOLS) || item.is(ItemTags.AXES))
+                        && !item.is(Tags.Items.RANGED_WEAPON_TOOLS)) {
+                    event.addModifier(Attributes.BLOCK_BREAK_SPEED, new AttributeModifier(
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.mining_speed"),
+                                    (double) aiData.level() / 10.0,
+                                    AttributeModifier.Operation.ADD_VALUE
+                            ),
+                            EquipmentSlotGroup.MAINHAND
+                    );
+                }
             }
         }
     }
@@ -182,12 +186,16 @@ public class CommonGameEvents {
         if (entity instanceof LivingEntity living) {
             for (EquipmentSlot slot: EquipmentSlot.values()) {
                 ItemStack item = living.getItemBySlot(slot);
-                AwakenedItemData awakenedItemData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
-                if (awakenedItemData != null) {
-                    if (living.getUUID() != awakenedItemData.owner()) {
-                        living.hurt(new DamageSource(entity.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)),
-                                1 + ((float)awakenedItemData.level() / 2));
+                if (item.has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
+                    AwakenedItemBehavior.inventoryTick(item, living);
+                }
+            }
+
+            if (living instanceof Player player) {
+                for (ItemStack stack: player.getInventory().items) {
+                    if (stack.has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
+                        AwakenedItemBehavior.inventoryTick(stack, player);
                     }
                 }
             }

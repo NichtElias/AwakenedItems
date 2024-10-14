@@ -1,6 +1,10 @@
 package party.elias.awakeneditems;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -39,5 +43,16 @@ public class AwakenedItemBehavior {
 
     public static Component formattedItemChatMessage(ItemStack itemStack, Component message) {
         return Component.literal("<").append(itemStack.getDisplayName()).append(Component.literal("> ")).append(message);
+    }
+
+    public static void inventoryTick(ItemStack itemStack, LivingEntity entity) {
+        AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+
+        itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData.withHeldByOwner(entity.getUUID().equals(awakenedItemData.owner())));
+
+        if (!entity.getUUID().equals(awakenedItemData.owner())) {
+            entity.hurt(new DamageSource(entity.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)),
+                    1 + ((float)awakenedItemData.level() / 2));
+        }
     }
 }
