@@ -9,7 +9,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -19,7 +18,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -30,10 +28,8 @@ import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
-import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
@@ -53,8 +49,8 @@ public class CommonGameEvents {
                 if (item.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
                     event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(
                                     ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.attack_damage"),
-                                    aiData.level(),
-                                    AttributeModifier.Operation.ADD_VALUE
+                                    (double) aiData.level() / 10.0,
+                                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
                             ),
                             EquipmentSlotGroup.MAINHAND
                     );
@@ -68,6 +64,25 @@ public class CommonGameEvents {
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.MAINHAND
+                    );
+                }
+                if (item.is(Tags.Items.ARMORS)) {
+                    double baseArmor = Utils.getSummedAttributeModifiers(item.getItem().getDefaultAttributeModifiers(item), Attributes.ARMOR, AttributeModifier.Operation.ADD_VALUE);
+                    double baseToughness = Utils.getSummedAttributeModifiers(item.getItem().getDefaultAttributeModifiers(item), Attributes.ARMOR_TOUGHNESS, AttributeModifier.Operation.ADD_VALUE);
+
+                    event.addModifier(Attributes.ARMOR, new AttributeModifier(
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.armor"),
+                                    (double) aiData.level() / 10.0 * baseArmor,
+                                    AttributeModifier.Operation.ADD_VALUE
+                            ),
+                            EquipmentSlotGroup.ARMOR
+                    );
+                    event.addModifier(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.armor_toughness"),
+                                    (double) aiData.level() / 10.0 * baseToughness,
+                                    AttributeModifier.Operation.ADD_VALUE
+                            ),
+                            EquipmentSlotGroup.ARMOR
                     );
                 }
             }
@@ -156,6 +171,18 @@ public class CommonGameEvents {
             ItemStack weapon = event.getSource().getWeaponItem();
             if (weapon.has(AwakenedItems.AWAKENED_ITEM_COMPONENT) && weapon.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
                 AwakenedItemBehavior.addXp(weapon, 1, event.getEntity().level());
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingTookDamage(LivingDamageEvent.Post event) {
+        for (EquipmentSlot slot: EquipmentSlot.values()) {
+            ItemStack item = event.getEntity().getItemBySlot(slot);
+            AwakenedItemData aiData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+
+            if (slot.isArmor() && aiData != null) {
+                AwakenedItemBehavior.addXp(item, 1, event.getEntity().level());
             }
         }
     }
