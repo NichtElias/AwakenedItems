@@ -225,6 +225,9 @@ public class CommonGameEvents {
                         AwakenedItemBehavior.inventoryTick(stack, player);
                     }
                 }
+
+                player.setData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT,
+                        player.getData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT).addTimeSinceLastItemMsg(1));
             }
         }
     }

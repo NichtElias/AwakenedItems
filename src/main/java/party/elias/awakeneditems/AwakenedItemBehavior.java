@@ -32,13 +32,25 @@ public class AwakenedItemBehavior {
         }
     }
 
-    public static void onItemLevelUp(ItemStack stack, AwakenedItemData aiData, Level world) {
-        if (!world.isClientSide()) {
-            Player owner = world.getPlayerByUUID(aiData.owner());
-            if (owner != null) {
-                owner.sendSystemMessage(formattedItemChatMessage(stack, Component.translatable("chat.awakeneditems.aimsg.levelup", aiData.level())));
+    public static void speakToOwner(ItemStack item, Level world, Component msg, int priority) {
+        AwakenedItemData aiData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+
+        if (aiData != null) {
+            if (!world.isClientSide()) {
+                Player owner = world.getPlayerByUUID(aiData.owner());
+                if (owner != null) {
+                    if (owner.getData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT).timeSinceLastItemMsg() >= priority) {
+                        owner.sendSystemMessage(formattedItemChatMessage(item, msg));
+                        owner.setData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT,
+                                owner.getData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT).withTimeSinceLastItemMsg(0));
+                    }
+                }
             }
         }
+    }
+
+    public static void onItemLevelUp(ItemStack stack, AwakenedItemData aiData, Level world) {
+        speakToOwner(stack, world, Component.translatable("chat.awakeneditems.aimsg.levelup", aiData.level()), 0);
     }
 
     public static Component formattedItemChatMessage(ItemStack itemStack, Component message) {

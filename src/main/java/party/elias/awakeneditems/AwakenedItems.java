@@ -16,10 +16,14 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.slf4j.Logger;
+
+import java.util.function.Supplier;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(AwakenedItems.MODID)
@@ -37,6 +41,8 @@ public class AwakenedItems {
 
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MODID);
 
+    public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MODID);
+
     public static final DeferredItem<Item> SOULSTUFF_ITEM = ITEMS.registerSimpleItem("soulstuff", new Item.Properties());
 
     // Creates a creative tab with the id "awakeneditems:example_tab" for the example item, that is placed after the combat tab
@@ -47,6 +53,9 @@ public class AwakenedItems {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<AwakenedItemData>> AWAKENED_ITEM_COMPONENT = DATA_COMPONENTS.registerComponentType("awakened_item",
             (builder) -> builder.persistent(AwakenedItemData.CODEC).networkSynchronized(AwakenedItemData.STREAM_CODEC));
 
+    public static final Supplier<AttachmentType<AwakenedItemPlayerData>> AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT = ATTACHMENT_TYPES.register("awakened_item_player_data",
+            () -> AttachmentType.builder(() -> new AwakenedItemPlayerData(0)).serialize(AwakenedItemPlayerData.CODEC).copyOnDeath().build());
+
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public AwakenedItems(IEventBus modEventBus, ModContainer modContainer) {
@@ -55,6 +64,7 @@ public class AwakenedItems {
         ITEMS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         DATA_COMPONENTS.register(modEventBus);
+        ATTACHMENT_TYPES.register(modEventBus);
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
