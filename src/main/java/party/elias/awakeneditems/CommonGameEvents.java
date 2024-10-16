@@ -204,6 +204,7 @@ public class CommonGameEvents {
     public static void onItemExpire(ItemExpireEvent event) {
         if (event.getEntity().getItem().has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
             event.getEntity().setUnlimitedLifetime();
+            AwakenedItemBehavior.onItemWouldDespawn(event.getEntity().getItem(), event.getEntity());
         }
     }
 

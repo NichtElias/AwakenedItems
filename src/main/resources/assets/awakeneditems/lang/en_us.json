@@ -4,5 +4,6 @@
   "ai.awakeneditems.tooltip": "Awakened [%s]",
   "ai.awakeneditems.tooltip.owner": "Bound to %s",
 
-  "chat.awakeneditems.aimsg.levelup": "I'm level %s now!"
+  "chat.awakeneditems.aimsg.levelup": "I'm level %s now!",
+  "chat.awakeneditems.aimsg.despawn": "Don't just leave me lying around!"
 }

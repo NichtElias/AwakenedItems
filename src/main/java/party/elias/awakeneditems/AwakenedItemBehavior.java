@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -51,6 +52,10 @@ public class AwakenedItemBehavior {
 
     public static void onItemLevelUp(ItemStack stack, AwakenedItemData aiData, Level world) {
         speakToOwner(stack, world, Component.translatable("chat.awakeneditems.aimsg.levelup", aiData.level()), 0);
+    }
+
+    public static void onItemWouldDespawn(ItemStack item, ItemEntity entity) {
+        speakToOwner(item, entity.level(), Component.translatable("chat.awakeneditems.aimsg.despawn"), 0);
     }
 
     public static Component formattedItemChatMessage(ItemStack itemStack, Component message) {
