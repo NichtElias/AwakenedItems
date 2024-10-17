@@ -6,21 +6,16 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public record AwakenedItemData(UUID owner, int level, int xp, boolean heldByOwner) {
+public record AwakenedItemData(UUID owner, int level, int xp, boolean heldByOwner, List<PersonalityTrait> personality) {
 
-    public AwakenedItemData(UUID owner) {
-        this(owner, 0, 0, true);
-    }
-
-    public AwakenedItemData(UUID owner, boolean heldByOwner) {
-        this(owner, 0, 0, heldByOwner);
-    }
-
-    public AwakenedItemData(UUID owner, int level, int xp) {
-        this(owner, level, xp, true);
+    public AwakenedItemData(UUID owner, List<PersonalityTrait> personality) {
+        this(owner, 0, 0, true, personality);
     }
 
     public static final Codec<AwakenedItemData> CODEC = RecordCodecBuilder.create(instance ->
@@ -28,7 +23,8 @@ public record AwakenedItemData(UUID owner, int level, int xp, boolean heldByOwne
                     UUIDUtil.CODEC.fieldOf("owner").forGetter(AwakenedItemData::owner),
                     Codec.INT.fieldOf("level").forGetter(AwakenedItemData::level),
                     Codec.INT.fieldOf("xp").forGetter(AwakenedItemData::xp),
-                    Codec.BOOL.fieldOf("heldByOwner").forGetter(AwakenedItemData::heldByOwner)
+                    Codec.BOOL.fieldOf("heldByOwner").forGetter(AwakenedItemData::heldByOwner),
+                    Codec.list(PersonalityTrait.CODEC).fieldOf("personality").forGetter(AwakenedItemData::personality)
             ).apply(instance, AwakenedItemData::new)
     );
 
@@ -37,20 +33,19 @@ public record AwakenedItemData(UUID owner, int level, int xp, boolean heldByOwne
             ByteBufCodecs.INT, AwakenedItemData::level,
             ByteBufCodecs.INT, AwakenedItemData::xp,
             ByteBufCodecs.BOOL, AwakenedItemData::heldByOwner,
+            PersonalityTrait.STREAM_CODEC.apply(ByteBufCodecs.list()), AwakenedItemData::personality,
             AwakenedItemData::new
     );
 
-    public static final AwakenedItemData DEFAULT = new AwakenedItemData(UUID.fromString("0-0-0-0-0"));
-
     public AwakenedItemData withLevel(int level) {
-        return new AwakenedItemData(owner, level, xp, heldByOwner);
+        return new AwakenedItemData(owner, level, xp, heldByOwner, personality);
     }
 
     public AwakenedItemData withXp(int xp) {
-        return new AwakenedItemData(owner, level, xp, heldByOwner);
+        return new AwakenedItemData(owner, level, xp, heldByOwner, personality);
     }
 
     public AwakenedItemData withHeldByOwner(boolean heldByOwner) {
-        return new AwakenedItemData(owner, level, xp, heldByOwner);
+        return new AwakenedItemData(owner, level, xp, heldByOwner, personality);
     }
 }

@@ -99,7 +99,7 @@ public class CommonGameEvents {
 
             for (ItemEntity itemEntity: itemEntities) {
                 if (!itemEntity.getItem().has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
-                    itemEntity.getItem().set(AwakenedItems.AWAKENED_ITEM_COMPONENT, new AwakenedItemData(event.getEntity().getUUID()));
+                    itemEntity.getItem().set(AwakenedItems.AWAKENED_ITEM_COMPONENT, new AwakenedItemData(event.getEntity().getUUID(), AwakenedItemBehavior.getRandomPersonality()));
                     item.shrink(1);
 
                     //  flair

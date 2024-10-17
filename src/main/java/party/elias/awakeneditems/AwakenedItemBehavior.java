@@ -2,6 +2,7 @@ package party.elias.awakeneditems;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,7 +11,23 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import java.util.*;
+
 public class AwakenedItemBehavior {
+
+    public static List<PersonalityTrait> getRandomPersonality() {
+        List<PersonalityTrait> pickedTraits = new ArrayList<>();
+        List<PersonalityTrait> possibleTraits = new ArrayList<>(PersonalityTrait.SET);
+
+        for (int i = 0; i < 2 && !possibleTraits.isEmpty(); i++) {
+            PersonalityTrait t = Utils.randomChoice(possibleTraits);
+            possibleTraits.removeAll(t.getIncompatibleTraitsAsTraits());
+            possibleTraits.remove(t);
+            pickedTraits.add(t);
+        }
+
+        return pickedTraits;
+    }
 
     public static int getRequiredXp(int currentLevel) {
         return (int) (Math.pow(1.25, currentLevel) * 10);
