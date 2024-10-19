@@ -5,5 +5,8 @@
   "ai.awakeneditems.tooltip.owner": "Bound to %s",
 
   "chat.awakeneditems.aimsg.levelup.any.any": "I'm level %s now!",
-  "chat.awakeneditems.aimsg.despawn.any.any": "Don't just leave me lying around!"
+  "chat.awakeneditems.aimsg.despawn.any.any": "Don't just leave me lying around!",
+  "chat.awakeneditems.aimsg.mobpickup.any.any": "Help! I've been picked up by a %s!",
+  "chat.awakeneditems.aimsg.levelup.any.lazy": "Finally reached level %s.",
+  "chat.awakeneditems.aimsg.despawn.any.insecure": "D-don't leave me!"
 }

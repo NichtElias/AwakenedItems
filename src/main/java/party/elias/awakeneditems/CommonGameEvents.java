@@ -29,6 +29,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -205,6 +206,21 @@ public class CommonGameEvents {
         if (event.getEntity().getItem().has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
             event.getEntity().setUnlimitedLifetime();
             AwakenedItemBehavior.speakToOwner(event.getEntity().getItem(), event.getEntity().level(), "despawn", 0);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
+        if (!(event.getEntity() instanceof Player)) {
+            ItemStack item = event.getTo();
+
+            AwakenedItemData aiData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+            AwakenedItemData prevAIData = event.getFrom().get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+
+            // TODO: if I ever give awakened items a uuid, use that to compare to the previous ItemStack instead of personality
+            if (aiData != null && (prevAIData == null || !prevAIData.personality().equals(aiData.personality()))) {
+                AwakenedItemBehavior.speakToOwner(item, event.getEntity().level(), "mobpickup", 0, Component.translatable(event.getEntity().getType().getDescriptionId()));
+            }
         }
     }
 
