@@ -62,6 +62,7 @@ public record ItemChatMessage(ItemStack item, String trigger, List<Component> fo
             for (String k: keys) {
                 if (I18n.exists(k)) {
                     key = k;
+                    break;
                 }
             }
 
@@ -80,11 +81,13 @@ public record ItemChatMessage(ItemStack item, String trigger, List<Component> fo
 
         List<String> keys = new ArrayList<>();
 
-        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(0) + "-" + traits.get(1)));
-        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(1) + "-" + traits.get(0)));
-        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(0)));
-        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(1)));
+        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(0).lower() + "-" + traits.get(1).lower()));
+        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(1).lower() + "-" + traits.get(0).lower()));
+        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(0).lower()));
+        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(1).lower()));
         keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", "any"));
+
+        AwakenedItems.LOGGER.debug("tl keys: {}", keys);
 
         return keys;
     }

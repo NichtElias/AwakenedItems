@@ -31,6 +31,10 @@ public enum PersonalityTrait {
         return Set.copyOf(incompatibleTraits.stream().map(PersonalityTrait::valueOf).toList());
     }
 
+    public String lower() {
+        return name().toLowerCase();
+    }
+
     public static final Map<String, PersonalityTrait> MAP = new HashMap<>();
 
     public static final Set<PersonalityTrait> SET = new HashSet<>();
