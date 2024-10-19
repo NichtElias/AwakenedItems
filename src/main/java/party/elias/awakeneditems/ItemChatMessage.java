@@ -14,7 +14,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record ItemChatMessage(ItemStack item, String trigger, List<Component> formatArgs) implements CustomPacketPayload {
@@ -53,28 +55,37 @@ public record ItemChatMessage(ItemStack item, String trigger, List<Component> fo
         AwakenedItemData aiData = icm.item().get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         if (aiData != null) {
-            List<PersonalityTrait> traits = aiData.personality();
+            List<String> keys = getPossibleTranslationKeys(icm, aiData);
 
-            String key0 = AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(0) + "-" + traits.get(1));
-            String key1 = AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(0));
-            String key2 = AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(1));
-            String key3 = AIMSG_KEY.formatted(icm.trigger(), "any", "any");
+            String key = null;
 
-            String key;
+            for (String k: keys) {
+                if (I18n.exists(k)) {
+                    key = k;
+                }
+            }
 
-            if (I18n.exists(key0)) {
-                key = key0;
-            } else if (I18n.exists(key1)) {
-                key = key1;
-            } else if (I18n.exists(key2)) {
-                key = key2;
-            } else {
-                key = key3;
+            if (key == null) {
+                key = keys.getLast();
             }
 
             player.sendSystemMessage(Component.literal("<").append(icm.item().getDisplayName()).append(Component.literal("> "))
                     .append(Component.translatable(key, icm.formatArgs.toArray())));
         }
 
+    }
+
+    private static @NotNull List<String> getPossibleTranslationKeys(ItemChatMessage icm, AwakenedItemData aiData) {
+        List<PersonalityTrait> traits = aiData.personality();
+
+        List<String> keys = new ArrayList<>();
+
+        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(0) + "-" + traits.get(1)));
+        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(1) + "-" + traits.get(0)));
+        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(0)));
+        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(1)));
+        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", "any"));
+
+        return keys;
     }
 }
