@@ -2,14 +2,13 @@ package party.elias.awakeneditems;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Tuple;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.*;
 
@@ -43,40 +42,30 @@ public class AwakenedItemBehavior {
                 data = data.withXp(data.xp() - getRequiredXp(data.level())).withLevel(data.level() + 1);
 
                 stack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, data);
-                onItemLevelUp(stack, data, world);
+                AwakenedItemBehavior.speakToOwner(stack, world, "levelup", 0, Component.literal(String.valueOf(data.level())));
             }
 
             stack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, data);
         }
     }
 
-    public static void speakToOwner(ItemStack item, Level world, Component msg, int priority) {
+    public static void speakToOwner(ItemStack item, Level world, String trigger, int priority, Component... args) {
         AwakenedItemData aiData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         if (aiData != null) {
             if (!world.isClientSide()) {
-                Player owner = world.getPlayerByUUID(aiData.owner());
+                ServerPlayer owner = (ServerPlayer) world.getPlayerByUUID(aiData.owner());
                 if (owner != null) {
                     if (owner.getData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT).timeSinceLastItemMsg() >= priority) {
-                        owner.sendSystemMessage(formattedItemChatMessage(item, msg));
+
+                        PacketDistributor.sendToPlayer(owner, new ItemChatMessage(item, trigger, Arrays.stream(args).toList()));
+
                         owner.setData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT,
                                 owner.getData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT).withTimeSinceLastItemMsg(0));
                     }
                 }
             }
         }
-    }
-
-    public static void onItemLevelUp(ItemStack stack, AwakenedItemData aiData, Level world) {
-        speakToOwner(stack, world, Component.translatable("chat.awakeneditems.aimsg.levelup", aiData.level()), 0);
-    }
-
-    public static void onItemWouldDespawn(ItemStack item, ItemEntity entity) {
-        speakToOwner(item, entity.level(), Component.translatable("chat.awakeneditems.aimsg.despawn"), 0);
-    }
-
-    public static Component formattedItemChatMessage(ItemStack itemStack, Component message) {
-        return Component.literal("<").append(itemStack.getDisplayName()).append(Component.literal("> ")).append(message);
     }
 
     public static void inventoryTick(ItemStack itemStack, LivingEntity entity) {

@@ -17,6 +17,8 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -84,6 +86,17 @@ public class AwakenedItems {
         public static void commonSetup(final FMLCommonSetupEvent event) {
             // Some common setup code
             LOGGER.info("HELLO FROM COMMON SETUP");
+        }
+
+        @SubscribeEvent
+        public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
+            PayloadRegistrar registrar = event.registrar("1");
+
+            registrar.playToClient(
+                    ItemChatMessage.TYPE,
+                    ItemChatMessage.STREAM_CODEC,
+                    ItemChatMessage::handle
+            );
         }
     }
 }
