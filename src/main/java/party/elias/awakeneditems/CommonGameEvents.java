@@ -48,10 +48,12 @@ public class CommonGameEvents {
         if (aiData != null) {
             if (aiData.heldByOwner()) {
                 if (item.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
+                    double baseDamage = Utils.getSummedAttributeModifiers(event.getDefaultModifiers(), Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADD_VALUE);
+
                     event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(
                                     ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.attack_damage"),
-                                    (double) aiData.level() / 10.0,
-                                    AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                                    (double) aiData.level() / 20.0 * (baseDamage + 8.0),
+                                    AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.MAINHAND
                     );
@@ -68,8 +70,8 @@ public class CommonGameEvents {
                     );
                 }
                 if (item.is(Tags.Items.ARMORS)) {
-                    double baseArmor = Utils.getSummedAttributeModifiers(item.getItem().getDefaultAttributeModifiers(item), Attributes.ARMOR, AttributeModifier.Operation.ADD_VALUE);
-                    double baseToughness = Utils.getSummedAttributeModifiers(item.getItem().getDefaultAttributeModifiers(item), Attributes.ARMOR_TOUGHNESS, AttributeModifier.Operation.ADD_VALUE);
+                    double baseArmor = Utils.getSummedAttributeModifiers(event.getDefaultModifiers(), Attributes.ARMOR, AttributeModifier.Operation.ADD_VALUE);
+                    double baseToughness = Utils.getSummedAttributeModifiers(event.getDefaultModifiers(), Attributes.ARMOR_TOUGHNESS, AttributeModifier.Operation.ADD_VALUE);
 
                     event.addModifier(Attributes.ARMOR, new AttributeModifier(
                                     ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.armor"),
