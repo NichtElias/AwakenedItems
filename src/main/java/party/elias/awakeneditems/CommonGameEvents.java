@@ -17,6 +17,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
@@ -28,10 +30,12 @@ import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
@@ -207,7 +211,7 @@ public class CommonGameEvents {
     public static void onItemExpire(ItemExpireEvent event) {
         if (event.getEntity().getItem().has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
             event.getEntity().setUnlimitedLifetime();
-            AwakenedItemBehavior.speakToOwner(event.getEntity().getItem(), event.getEntity().level(), "despawn", 0);
+            AwakenedItemBehavior.speakToOwner(event.getEntity().getItem(), event.getEntity().level(), "despawn", 20);
         }
     }
 
@@ -221,8 +225,30 @@ public class CommonGameEvents {
 
             // TODO: if I ever give awakened items a uuid, use that to compare to the previous ItemStack instead of personality
             if (aiData != null && (prevAIData == null || !prevAIData.personality().equals(aiData.personality()))) {
-                AwakenedItemBehavior.speakToOwner(item, event.getEntity().level(), "mobpickup", 0, Component.translatable(event.getEntity().getType().getDescriptionId()));
+                AwakenedItemBehavior.speakToOwner(item, event.getEntity().level(), "mobpickup", 20, Component.translatable(event.getEntity().getType().getDescriptionId()));
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        Utils.forAllAwakenedItemsOnEntity(event.getEntity(), (stack, entity) -> {
+            AwakenedItemBehavior.speakToOwner(stack, entity.level(), "dimchange", 200, Component.translatable(
+                    "dimension." + event.getTo().location().toLanguageKey()
+            ));
+        });
+    }
+
+    @SubscribeEvent
+    public static void onLivingChangeTargetEvent(LivingChangeTargetEvent event) {
+        if (event.getEntity() instanceof Monster monster && event.getNewAboutToBeSetTarget() instanceof Player player) {
+            Utils.forAllAwakenedItemsOnEntity(player, (item, entity) -> {
+                if (entity instanceof Creeper) {
+                    AwakenedItemBehavior.speakToOwner(item, entity.level(), "mobtarget", 50, Component.translatable(monster.getType().getDescriptionId()));
+                } else {
+                    AwakenedItemBehavior.speakToOwner(item, entity.level(), "mobtarget", 2000, Component.translatable(monster.getType().getDescriptionId()));
+                }
+            });
         }
     }
 
@@ -230,21 +256,9 @@ public class CommonGameEvents {
     public static void onEntityTick(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
         if (entity instanceof LivingEntity living) {
-            for (EquipmentSlot slot: EquipmentSlot.values()) {
-                ItemStack item = living.getItemBySlot(slot);
-
-                if (item.has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
-                    AwakenedItemBehavior.inventoryTick(item, living);
-                }
-            }
+            Utils.forAllAwakenedItemsOnEntity(living, AwakenedItemBehavior::inventoryTick);
 
             if (living instanceof Player player) {
-                for (ItemStack stack: player.getInventory().items) {
-                    if (stack.has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
-                        AwakenedItemBehavior.inventoryTick(stack, player);
-                    }
-                }
-
                 player.setData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT,
                         player.getData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT).addTimeSinceLastItemMsg(1));
             }

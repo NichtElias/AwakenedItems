@@ -12,10 +12,11 @@ import java.util.Map;
 import java.util.Set;
 
 public enum PersonalityTrait {
-    AGGRESSIVE(Set.of()),
+    ARROGANT(Set.of()),
     LAZY(Set.of()),
-    INSECURE(Set.of("ARROGANT")),
-    ARROGANT(Set.of("INSECURE"));
+    INSECURE(Set.of()),
+    SCHEMING(Set.of()),
+    MERRY(Set.of());
 
     private final Set<String> incompatibleTraits;
 

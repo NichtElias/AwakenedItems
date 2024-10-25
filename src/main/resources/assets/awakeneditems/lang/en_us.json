@@ -5,8 +5,21 @@
   "ai.awakeneditems.tooltip.owner": "Bound to %s",
 
   "chat.awakeneditems.aimsg.levelup.any.any": "I'm level %s now!",
-  "chat.awakeneditems.aimsg.despawn.any.any": "Don't just leave me lying around!",
-  "chat.awakeneditems.aimsg.mobpickup.any.any": "Help! I've been picked up by a %s!",
   "chat.awakeneditems.aimsg.levelup.any.lazy": "Finally reached level %s.",
-  "chat.awakeneditems.aimsg.despawn.any.insecure": "D-don't leave me!"
+  "chat.awakeneditems.aimsg.levelup.any.scheming": "Level %s... One step closer to completion.",
+  "chat.awakeneditems.aimsg.levelup.any.merry": "Fantastic! I'm level %s now!",
+  "chat.awakeneditems.aimsg.levelup.any.arrogant": "Haha! Level %s! Unawakened items could never compare to me.",
+  "chat.awakeneditems.aimsg.despawn.any.any": "Don't just leave me lying around!",
+  "chat.awakeneditems.aimsg.despawn.any.scheming": "I can appreciate taking your time, but this is getting a bit excessive. Pick me up already.",
+  "chat.awakeneditems.aimsg.despawn.any.arrogant": "How dare you leave me lying on the ground!",
+  "chat.awakeneditems.aimsg.despawn.any.insecure": "A-are you leaving me?",
+  "chat.awakeneditems.aimsg.despawn.any.merry": "Some rest once in a while is nice too! Even if i'd rather not rest on the ground.",
+  "chat.awakeneditems.aimsg.mobpickup.any.any": "Help! I've been picked up by a %s!",
+  "chat.awakeneditems.aimsg.mobpickup.any.insecure": "Ahhh! Help! I'm being kidnapped by a %s!",
+  "chat.awakeneditems.aimsg.mobpickup.any.scheming": "A %s is disrupting our plans by taking me hostage!",
+  "chat.awakeneditems.aimsg.mobpickup.any.arrogant": "A filthy %s has laid hands on me!",
+  "chat.awakeneditems.aimsg.dimchange.any.merry": "Oh great, we're going to the %s!",
+  "chat.awakeneditems.aimsg.dimchange.any.lazy": "Can we stop traveling so much?",
+  "chat.awakeneditems.aimsg.dimchange.any.scheming": "And so the next step of our plans leads us to the %s.",
+  "chat.awakeneditems.aimsg.mobtarget.any.any": "A %s is targeting you."
 }
