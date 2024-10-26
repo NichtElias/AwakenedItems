@@ -46,3 +46,21 @@ Personalities are made up of a collection of traits.
 `chat.awakeneditems.aimsg.<trigger>.<tool>.<personality>`
 
 Tool can be `any`.
+
+Priority of translation keys:
+
+- 1-2-3
+- 1-3-2
+- 2-1-3
+- 2-3-1
+- 3-1-2
+- 3-2-1
+- 1-2
+- 1-3
+- 2-1
+- 2-3
+- 3-1
+- 3-2
+- 1
+- 2
+- 3

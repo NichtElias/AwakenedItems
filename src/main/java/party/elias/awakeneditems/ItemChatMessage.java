@@ -17,6 +17,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public record ItemChatMessage(ItemStack item, String trigger, List<Component> formatArgs) implements CustomPacketPayload {
@@ -50,16 +51,49 @@ public record ItemChatMessage(ItemStack item, String trigger, List<Component> fo
 
     }
 
+    private static final List<List<Integer>> ICM_I18N_PRIORITY_MATRIX = List.of(
+            List.of(0, 1, 2),
+            List.of(0, 2, 1),
+            List.of(1, 0, 2),
+            List.of(1, 2, 0),
+            List.of(2, 0, 1),
+            List.of(2, 1, 0),
+            List.of(0, 1),
+            List.of(0, 2),
+            List.of(1, 0),
+            List.of(1, 2),
+            List.of(2, 0),
+            List.of(2, 1),
+            List.of(0),
+            List.of(1),
+            List.of(2)
+    );
+
+    private static int checkVariants(String key) {
+        int variantCount = 0;
+        for (int i = 1; I18n.exists(key + "." + i); i++) {
+            variantCount = i;
+        }
+        return variantCount;
+    }
+
     public static void sendItemChatMessage(Player player, ItemChatMessage icm) {
 
         AwakenedItemData aiData = icm.item().get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         if (aiData != null) {
-            List<String> keys = getPossibleTranslationKeys(icm, aiData);
-
             String key = null;
 
-            for (String k: keys) {
+            List<PersonalityTrait> traits = aiData.personality();
+
+            for (List<Integer> combination:
+                    ICM_I18N_PRIORITY_MATRIX.stream().filter(l -> l.stream().max(Integer::compare).orElse(Integer.MAX_VALUE) < traits.size()).toList()) {
+
+                String traitString = String.join("-",
+                        combination.stream().map(traits::get).map(PersonalityTrait::lower).toList());
+
+                String k = AIMSG_KEY.formatted(icm.trigger(), "any", traitString);
+
                 if (I18n.exists(k)) {
                     key = k;
                     break;
@@ -67,28 +101,24 @@ public record ItemChatMessage(ItemStack item, String trigger, List<Component> fo
             }
 
             if (key == null) {
-                key = keys.getLast();
+                key = AIMSG_KEY.formatted(icm.trigger(), "any", "any");
             }
 
-            player.sendSystemMessage(Component.literal("<").append(icm.item().getDisplayName()).append(Component.literal("> "))
-                    .append(Component.translatable(key, icm.formatArgs.toArray())));
+            if (I18n.exists(key)) {
+                int variantCount = checkVariants(key);
+
+                if (variantCount > 0) {
+                    int selectedVariant = (int) (Math.random() * (variantCount + 1));
+
+                    if (selectedVariant != 0) {
+                        key = key + "." + selectedVariant;
+                    }
+                }
+
+                player.sendSystemMessage(Component.literal("<").append(icm.item().getDisplayName()).append(Component.literal("> "))
+                        .append(Component.translatable(key, icm.formatArgs.toArray())));
+            }
         }
 
-    }
-
-    private static @NotNull List<String> getPossibleTranslationKeys(ItemChatMessage icm, AwakenedItemData aiData) {
-        List<PersonalityTrait> traits = aiData.personality();
-
-        List<String> keys = new ArrayList<>();
-
-        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(0).lower() + "-" + traits.get(1).lower()));
-        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(1).lower() + "-" + traits.get(0).lower()));
-        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(0).lower()));
-        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", traits.get(1).lower()));
-        keys.add(AIMSG_KEY.formatted(icm.trigger(), "any", "any"));
-
-        AwakenedItems.LOGGER.debug("tl keys: {}", keys);
-
-        return keys;
     }
 }

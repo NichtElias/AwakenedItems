@@ -21,5 +21,8 @@
   "chat.awakeneditems.aimsg.dimchange.any.merry": "Oh great, we're going to the %s!",
   "chat.awakeneditems.aimsg.dimchange.any.lazy": "Can we stop traveling so much?",
   "chat.awakeneditems.aimsg.dimchange.any.scheming": "And so the next step of our plans leads us to the %s.",
-  "chat.awakeneditems.aimsg.mobtarget.any.any": "A %s is targeting you."
+  "chat.awakeneditems.aimsg.mobtarget.any.any": "A %s is targeting you.",
+  "chat.awakeneditems.aimsg.random.any.merry": "What a wonderful day!",
+  "chat.awakeneditems.aimsg.random.any.merry.1": "Nice weather here!",
+  "chat.awakeneditems.aimsg.random.any.merry.2": "You look good today!"
 }

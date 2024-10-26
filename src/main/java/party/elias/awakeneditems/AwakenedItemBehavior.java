@@ -73,6 +73,10 @@ public class AwakenedItemBehavior {
 
         itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData.withHeldByOwner(entity.getUUID().equals(awakenedItemData.owner())));
 
+        if (!entity.level().isClientSide() && Math.random() < 0.001) {
+            speakToOwner(itemStack, entity.level(), "random", 2000);
+        }
+
         if (!entity.getUUID().equals(awakenedItemData.owner())) {
             entity.hurt(new DamageSource(entity.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)),
                     1 + ((float)awakenedItemData.level() / 2));
