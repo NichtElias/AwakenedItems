@@ -248,12 +248,15 @@ public class CommonGameEvents {
 
     @SubscribeEvent
     public static void onLivingChangeTargetEvent(LivingChangeTargetEvent event) {
-        if (event.getEntity() instanceof Monster monster && event.getNewAboutToBeSetTarget() instanceof Player player) {
+        if (event.getEntity() instanceof Monster monster && event.getNewAboutToBeSetTarget() instanceof Player player
+                && (monster.getTarget() == null || !monster.getTarget().equals(player))) {
             Utils.forAllAwakenedItemsOnEntity(player, (item, entity) -> {
-                if (entity instanceof Creeper) {
-                    AwakenedItemBehavior.speakToOwner(item, entity.level(), "mobtarget", 50, Component.translatable(monster.getType().getDescriptionId()));
-                } else {
-                    AwakenedItemBehavior.speakToOwner(item, entity.level(), "mobtarget", 2000, Component.translatable(monster.getType().getDescriptionId()));
+                if (!player.level().isClientSide() && Math.random() < 0.25) {
+                    if (entity instanceof Creeper) {
+                        AwakenedItemBehavior.speakToOwner(item, entity.level(), "mobtarget", 50, Component.translatable(monster.getType().getDescriptionId()));
+                    } else {
+                        AwakenedItemBehavior.speakToOwner(item, entity.level(), "mobtarget", 500, Component.translatable(monster.getType().getDescriptionId()));
+                    }
                 }
             });
         }
