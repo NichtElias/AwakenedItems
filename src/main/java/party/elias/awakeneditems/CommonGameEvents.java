@@ -124,8 +124,8 @@ public class CommonGameEvents {
                         event.getLevel().playLocalSound(event.getPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1, 1, false);
                     }
 
-                    event.getEntity().hurt(new DamageSource(event.getLevel().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
-                                    .getHolderOrThrow(DamageTypes.GENERIC)), 1); // represents binding it to yourself
+                    event.getEntity().hurt(new DamageSource(event.getLevel().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE)
+                                    .getOrThrow(DamageTypes.GENERIC)), 1); // represents binding it to yourself
 
                     event.setCanceled(true);
 

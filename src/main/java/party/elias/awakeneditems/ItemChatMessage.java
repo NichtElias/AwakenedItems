@@ -115,8 +115,8 @@ public record ItemChatMessage(ItemStack item, String trigger, List<Component> fo
                     }
                 }
 
-                player.sendSystemMessage(Component.literal("<").append(icm.item().getDisplayName()).append(Component.literal("> "))
-                        .append(Component.translatable(key, icm.formatArgs.toArray())));
+                player.displayClientMessage(Component.literal("<").append(icm.item().getDisplayName()).append(Component.literal("> "))
+                        .append(Component.translatable(key, icm.formatArgs.toArray())), false);
             }
         }
 

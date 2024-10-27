@@ -78,7 +78,7 @@ public class AwakenedItemBehavior {
         }
 
         if (!entity.getUUID().equals(awakenedItemData.owner())) {
-            entity.hurt(new DamageSource(entity.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)),
+            entity.hurt(new DamageSource(entity.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.GENERIC)),
                     1 + ((float)awakenedItemData.level() / 2));
         }
     }
