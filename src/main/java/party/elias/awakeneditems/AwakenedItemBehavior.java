@@ -29,7 +29,7 @@ public class AwakenedItemBehavior {
     }
 
     public static int getRequiredXp(int currentLevel) {
-        return (int) (Math.pow(1.25, currentLevel) * 10);
+        return (int) (Math.pow(1.25, currentLevel) * 500);
     }
 
     public static void addXp(ItemStack stack, int amount, Level world) {
