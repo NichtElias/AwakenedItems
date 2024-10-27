@@ -161,18 +161,18 @@ public class CommonGameEvents {
     public static void onItemTooltip(ItemTooltipEvent event) {
         AwakenedItemData aiData = event.getItemStack().get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
         if (aiData != null) {
-            event.getToolTip().add(
+            event.getToolTip().add(1,
                     Component.translatable("ai.awakeneditems.tooltip",
                             aiData.level()
                     ).withStyle(ChatFormatting.AQUA)
             );
             if (event.getContext().level() != null && event.getContext().level().getPlayerByUUID(aiData.owner()) != null) {
-                event.getToolTip().add(
+                event.getToolTip().add(2,
                         Component.translatable("ai.awakeneditems.tooltip.owner", event.getContext().level().getPlayerByUUID(aiData.owner()).getDisplayName())
                                 .withStyle(ChatFormatting.DARK_AQUA)
                 );
             } else {
-                event.getToolTip().add(
+                event.getToolTip().add(2,
                         Component.translatable("ai.awakeneditems.tooltip.owner", "???").withStyle(ChatFormatting.DARK_AQUA)
                 );
             }
