@@ -1,6 +1,7 @@
 package party.elias.awakeneditems;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -127,6 +128,12 @@ public class CommonGameEvents {
                                     .getHolderOrThrow(DamageTypes.GENERIC)), 1); // represents binding it to yourself
 
                     event.setCanceled(true);
+
+                    if (itemEntity.getItem().has(DataComponents.CUSTOM_NAME)) {
+                        AwakenedItemBehavior.speakToOwner(itemEntity.getItem(), event.getLevel(), "awaken", 0, itemEntity.getItem().getDisplayName());
+                    } else {
+                        AwakenedItemBehavior.speakToOwner(itemEntity.getItem(), event.getLevel(), "awaken-noname", 0, itemEntity.getItem().getDisplayName());
+                    }
                 }
             }
         }
