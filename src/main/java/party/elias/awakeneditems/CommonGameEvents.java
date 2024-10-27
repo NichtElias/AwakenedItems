@@ -130,9 +130,9 @@ public class CommonGameEvents {
                     event.setCanceled(true);
 
                     if (itemEntity.getItem().has(DataComponents.CUSTOM_NAME)) {
-                        AwakenedItemBehavior.speakToOwner(itemEntity.getItem(), event.getLevel(), "awaken", 0, itemEntity.getItem().getDisplayName());
+                        AwakenedItemBehavior.speakToOwner(itemEntity.getItem(), event.getLevel(), "awaken", 0, itemEntity.getItem().getHoverName());
                     } else {
-                        AwakenedItemBehavior.speakToOwner(itemEntity.getItem(), event.getLevel(), "awaken-noname", 0, itemEntity.getItem().getDisplayName());
+                        AwakenedItemBehavior.speakToOwner(itemEntity.getItem(), event.getLevel(), "awaken-noname", 0, itemEntity.getItem().getHoverName());
                     }
                 }
             }
