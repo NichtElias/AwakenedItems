@@ -52,41 +52,48 @@ public class CommonGameEvents {
         AwakenedItemData aiData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
         if (aiData != null) {
             if (aiData.heldByOwner()) {
-                if (item.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
-                    double baseDamage = Utils.getSummedAttributeModifiers(event.getDefaultModifiers(), Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADD_VALUE);
+                if (AwakenedItemType.MELEE_WEAPON.checkItem(item)) {
 
                     event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(
-                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.attack_damage"),
-                                    (double) aiData.level() / 20.0 * (baseDamage + 8.0),
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.add"),
+                                    (double) aiData.level() / 20.0 * 5.0,
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.MAINHAND
                     );
+
+                    event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.mul"),
+                                    (double) aiData.level() / 20.0,
+                                    AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                            ),
+                            EquipmentSlotGroup.MAINHAND
+                    );
                 }
-                if (item.is(Tags.Items.TOOLS)
-                        && (!item.is(Tags.Items.MELEE_WEAPON_TOOLS) || item.is(ItemTags.AXES))
-                        && !item.is(Tags.Items.RANGED_WEAPON_TOOLS)) {
-                    event.addModifier(Attributes.BLOCK_BREAK_SPEED, new AttributeModifier(
-                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.mining_speed"),
+                if (AwakenedItemType.BREAKING_TOOL.checkItem(item)) {
+
+                    event.addModifier(Attributes.MINING_EFFICIENCY, new AttributeModifier(
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
                                     (double) aiData.level() / 10.0,
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.MAINHAND
                     );
                 }
-                if (item.is(Tags.Items.ARMORS)) {
+                if (AwakenedItemType.ARMOR.checkItem(item)) {
                     double baseArmor = Utils.getSummedAttributeModifiers(event.getDefaultModifiers(), Attributes.ARMOR, AttributeModifier.Operation.ADD_VALUE);
                     double baseToughness = Utils.getSummedAttributeModifiers(event.getDefaultModifiers(), Attributes.ARMOR_TOUGHNESS, AttributeModifier.Operation.ADD_VALUE);
 
                     event.addModifier(Attributes.ARMOR, new AttributeModifier(
-                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.armor"),
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
                                     (double) aiData.level() / 10.0 * baseArmor,
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.ARMOR
                     );
+
                     event.addModifier(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(
-                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.armor_toughness"),
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
                                     (double) aiData.level() / 10.0 * baseToughness,
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
