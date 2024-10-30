@@ -27,3 +27,16 @@ If the item...
 - has the `c:tools` tag but not the `c:tools/ranged_weapon` tag and either the `minecraft:axes` tag or not the `c:tools/melee_weapons` tag, it's considered a block breaking tool and its mining speed increases per level.
 - has the `c:armors` tag, it's considered armor and its armor and armor toughness values increase per level. These per-level-increases are dependent on the armors original values, so armors that don't have armor toughness don't get it from levels either.
 
+## Roadmap
+
+In arbitrary order.
+
+- bow & crossbow support
+- trident & mace support
+- support for other item types
+- soulstuff recipe changing depending on what other mods are present
+- better detection of item type
+- more personalities
+- more situations in which the items talk
+- item messages dependent on item type
+- more interesting item awakening
