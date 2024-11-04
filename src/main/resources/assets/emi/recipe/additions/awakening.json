@@ -1,0 +1,8 @@
+{
+  "type": "emi:info",
+  "stacks": [
+    "item:awakeneditems:soulstuff",
+    "item:minecraft:anvil"
+  ],
+  "text": "emi.info.awakeneditems.awakening"
+}

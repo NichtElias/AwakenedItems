@@ -3,6 +3,7 @@
   "item.awakeneditems.soulstuff": "Soulstuff",
   "ai.awakeneditems.tooltip": "Awakened [%s]",
   "ai.awakeneditems.tooltip.owner": "Bound to %s",
+  "emi.info.awakeneditems.awakening": "Any item can be awakened by dropping it on an anvil and then using soulstuff on the anvil.",
 
   "chat.awakeneditems.aimsg.levelup.any.any": "I'm level %s now!",
   "chat.awakeneditems.aimsg.levelup.any.lazy": "Finally reached level %s.",
