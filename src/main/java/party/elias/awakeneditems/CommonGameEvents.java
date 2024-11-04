@@ -21,6 +21,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
@@ -273,19 +274,18 @@ public class CommonGameEvents {
 
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
+
         if (event.getEntity() instanceof Projectile projectile && !event.loadedFromDisk()) {
             ItemStack weapon = projectile.getWeaponItem();
-            AwakenedItems.LOGGER.debug("projectile {} joins level (shot from {})", projectile, weapon);
 
             if (weapon != null) {
                 AwakenedItemData awakenedItemData = weapon.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
-                AwakenedItems.LOGGER.debug("aidata is {}", awakenedItemData);
 
                 if (awakenedItemData != null) {
                     Entity owner = projectile.getOwner();
 
                     if (owner != null && owner.getUUID().equals(awakenedItemData.owner())) {
-                        projectile.setDeltaMovement(projectile.getDeltaMovement().scale(1 + awakenedItemData.level() / 5.0));
+                        projectile.setDeltaMovement(projectile.getDeltaMovement().scale(1 + awakenedItemData.level() / 10.0));
                     }
                 }
             }
