@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -21,7 +22,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
@@ -38,6 +38,7 @@ import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import net.neoforged.neoforge.event.entity.player.ArrowLooseEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -194,7 +195,7 @@ public class CommonGameEvents {
         if (event.getSource().getWeaponItem() != null) {
             ItemStack weapon = event.getSource().getWeaponItem();
             if (weapon.has(AwakenedItems.AWAKENED_ITEM_COMPONENT) && weapon.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
-                AwakenedItemBehavior.addXp(weapon, 1, event.getEntity().level());
+                AwakenedItemBehavior.addXp(weapon, 2, event.getEntity().level());
             }
         }
     }
@@ -206,7 +207,7 @@ public class CommonGameEvents {
             AwakenedItemData aiData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
             if (slot.isArmor() && aiData != null) {
-                AwakenedItemBehavior.addXp(item, 1, event.getEntity().level());
+                AwakenedItemBehavior.addXp(item, 4, event.getEntity().level());
             }
         }
     }
@@ -221,6 +222,17 @@ public class CommonGameEvents {
                 && !item.is(Tags.Items.RANGED_WEAPON_TOOLS)) {
                 AwakenedItemBehavior.addXp(item, 1, event.getPlayer().level());
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onArrowLoose(ArrowLooseEvent event) {
+        ItemStack item = event.getBow();
+
+        AwakenedItemData awakenedItemData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+
+        if (awakenedItemData != null) {
+            AwakenedItemBehavior.addXp(item, 4, event.getLevel());
         }
     }
 
