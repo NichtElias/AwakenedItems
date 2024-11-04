@@ -69,15 +69,21 @@ public class AwakenedItemBehavior {
         }
     }
 
+    public static void maybeSpeakToOwner(double p, ItemStack item, Level world, String trigger, int priority, Component... args) {
+        if (Math.random() < p) {
+            speakToOwner(item, world, trigger, priority, args);
+        }
+    }
+
     public static void inventoryTick(ItemStack itemStack, LivingEntity entity) {
         AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData.withHeldByOwner(entity.getUUID().equals(awakenedItemData.owner())));
 
-        if (entity.level() instanceof ServerLevel serverLevel && Math.random() < 0.001) {
-            speakToOwner(itemStack, entity.level(), "random", 2000);
+        if (entity.level() instanceof ServerLevel serverLevel) {
+            maybeSpeakToOwner(0.0005, itemStack, entity.level(), "random", 5000);
 
-            if (!entity.getUUID().equals(awakenedItemData.owner())) {
+            if (!entity.getUUID().equals(awakenedItemData.owner()) && Math.random() < 0.05) {
 
                 entity.hurtServer(serverLevel, new DamageSource(entity.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.GENERIC)),
                         1 + ((float)awakenedItemData.level() / 2));
