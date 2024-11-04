@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -24,6 +23,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -162,6 +162,7 @@ public class CommonGameEvents {
                         || ability == ItemAbilities.HOE_TILL
                         || ability == ItemAbilities.FIRESTARTER_LIGHT
                         || ability == ItemAbilities.SHEARS_TRIM) {
+                    AwakenedItemBehavior.maybeSpeakToOwner(0.01, item, event.getContext().getLevel(), "tooluse", 2000, event.getFinalState().getBlock().getName());
                     AwakenedItemBehavior.addXp(item, 1, event.getContext().getLevel());
                 }
             }
@@ -195,6 +196,7 @@ public class CommonGameEvents {
         if (event.getSource().getWeaponItem() != null) {
             ItemStack weapon = event.getSource().getWeaponItem();
             if (weapon.has(AwakenedItems.AWAKENED_ITEM_COMPONENT) && weapon.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
+                AwakenedItemBehavior.maybeSpeakToOwner(0.01, weapon, event.getEntity().level(), "weaponattack", 2000, event.getEntity().getType().getDescription());
                 AwakenedItemBehavior.addXp(weapon, 2, event.getEntity().level());
             }
         }
@@ -207,6 +209,7 @@ public class CommonGameEvents {
             AwakenedItemData aiData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
             if (slot.isArmor() && aiData != null) {
+                AwakenedItemBehavior.maybeSpeakToOwner(0.01, item, event.getEntity().level(), "armorprotect", 2000);
                 AwakenedItemBehavior.addXp(item, 4, event.getEntity().level());
             }
         }
@@ -220,6 +223,7 @@ public class CommonGameEvents {
             if (item.is(Tags.Items.TOOLS)
                 && (!item.is(Tags.Items.MELEE_WEAPON_TOOLS) || item.is(ItemTags.AXES))
                 && !item.is(Tags.Items.RANGED_WEAPON_TOOLS)) {
+                AwakenedItemBehavior.maybeSpeakToOwner(0.005, item, (Level) event.getLevel(), "toolmine", 2000, event.getState().getBlock().getName());
                 AwakenedItemBehavior.addXp(item, 1, event.getPlayer().level());
             }
         }
@@ -273,11 +277,11 @@ public class CommonGameEvents {
         if (event.getEntity() instanceof Monster monster && event.getNewAboutToBeSetTarget() instanceof Player player
                 && (monster.getTarget() == null || !monster.getTarget().equals(player))) {
             Utils.forAllAwakenedItemsOnEntity(player, (item, entity) -> {
-                if (!player.level().isClientSide() && Math.random() < 0.25) {
+                if (!player.level().isClientSide()) {
                     if (entity instanceof Creeper) {
-                        AwakenedItemBehavior.speakToOwner(item, entity.level(), "mobtarget", 50, Component.translatable(monster.getType().getDescriptionId()));
+                        AwakenedItemBehavior.maybeSpeakToOwner(0.5, item, entity.level(), "mobtarget", 50, Component.translatable(monster.getType().getDescriptionId()));
                     } else {
-                        AwakenedItemBehavior.speakToOwner(item, entity.level(), "mobtarget", 500, Component.translatable(monster.getType().getDescriptionId()));
+                        AwakenedItemBehavior.maybeSpeakToOwner(0.25, item, entity.level(), "mobtarget", 500, Component.translatable(monster.getType().getDescriptionId()));
                     }
                 }
             });

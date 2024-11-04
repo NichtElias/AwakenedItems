@@ -2,6 +2,7 @@ package party.elias.awakeneditems;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -68,18 +69,24 @@ public class AwakenedItemBehavior {
         }
     }
 
+    public static void maybeSpeakToOwner(double p, ItemStack item, Level world, String trigger, int priority, Component... args) {
+        if (Math.random() < p) {
+            speakToOwner(item, world, trigger, priority, args);
+        }
+    }
+
     public static void inventoryTick(ItemStack itemStack, LivingEntity entity) {
         AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData.withHeldByOwner(entity.getUUID().equals(awakenedItemData.owner())));
 
-        if (!entity.level().isClientSide() && Math.random() < 0.001) {
-            speakToOwner(itemStack, entity.level(), "random", 2000);
-        }
+        if (entity.level() instanceof ServerLevel serverLevel) {
+            maybeSpeakToOwner(0.0005, itemStack, entity.level(), "random", 5000);
 
-        if (!entity.getUUID().equals(awakenedItemData.owner())) {
-            entity.hurt(new DamageSource(entity.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)),
-                    1 + ((float)awakenedItemData.level() / 2));
+            if (!entity.getUUID().equals(awakenedItemData.owner()) && Math.random() < 0.05) {
+                entity.hurt(new DamageSource(entity.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)),
+                        1 + ((float) awakenedItemData.level() / 2));
+            }
         }
     }
 }
