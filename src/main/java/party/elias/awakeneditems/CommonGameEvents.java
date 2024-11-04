@@ -6,6 +6,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -135,8 +136,10 @@ public class CommonGameEvents {
                         event.getLevel().playLocalSound(event.getPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1, 1, false);
                     }
 
-                    event.getEntity().hurt(new DamageSource(event.getLevel().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE)
-                                    .getOrThrow(DamageTypes.GENERIC)), 1); // represents binding it to yourself
+                    if (event.getLevel() instanceof ServerLevel serverLevel) {
+                        event.getEntity().hurtServer(serverLevel, new DamageSource(event.getLevel().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE)
+                                .getOrThrow(DamageTypes.GENERIC)), 1); // represents binding it to yourself
+                    }
 
                     event.setCanceled(true);
 

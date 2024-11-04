@@ -2,6 +2,7 @@ package party.elias.awakeneditems;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -73,13 +74,14 @@ public class AwakenedItemBehavior {
 
         itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData.withHeldByOwner(entity.getUUID().equals(awakenedItemData.owner())));
 
-        if (!entity.level().isClientSide() && Math.random() < 0.001) {
+        if (entity.level() instanceof ServerLevel serverLevel && Math.random() < 0.001) {
             speakToOwner(itemStack, entity.level(), "random", 2000);
-        }
 
-        if (!entity.getUUID().equals(awakenedItemData.owner())) {
-            entity.hurt(new DamageSource(entity.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.GENERIC)),
-                    1 + ((float)awakenedItemData.level() / 2));
+            if (!entity.getUUID().equals(awakenedItemData.owner())) {
+
+                entity.hurtServer(serverLevel, new DamageSource(entity.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.GENERIC)),
+                        1 + ((float)awakenedItemData.level() / 2));
+            }
         }
     }
 }
