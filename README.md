@@ -19,24 +19,26 @@
 ## Supported Items
 
 As stated above, all items can be awakened. If you can drop it you can awaken it. That sadly doesn't mean all items will benefit from awakening.
-They will all talk, but the leveling only works if the item in question fulfills certain criteria.
+They will all talk, but the leveling and becoming stronger only works if the item in question fulfills certain criteria.
 
-If the item...
+Generally the following items should work just as you'd expect:
 
-- has the `c:tools/melee_weapon` tag, it's considered a melee weapon, and its attack damage increases per level.
-- has the `c:tools` tag but not the `c:tools/ranged_weapon` tag and either the `minecraft:axes` tag or not the `c:tools/melee_weapons` tag, it's considered a block breaking tool and its mining speed increases per level.
-- has the `c:armors` tag, it's considered armor and its armor and armor toughness values increase per level. These per-level-increases are dependent on the armors original values, so armors that don't have armor toughness don't get it from levels either.
+- Melee weapons (swords, maces, axes, etc.)
+- Tools used for breaking blocks (pickaxes, axes, hoes, etc.)
+- Armor
+- Bows
+- Tridents as melee weapons (they don't do more damage when thrown)
 
 ## Roadmap
 
 In arbitrary order.
 
-- bow & crossbow support
-- trident & mace support
+- crossbow support
+- trident support
 - support for other item types
 - soulstuff recipe changing depending on what other mods are present
-- better detection of item type
 - more personalities
 - more situations in which the items talk
 - item messages dependent on item type
 - more interesting item awakening
+- milestone levels that have special requirements 
