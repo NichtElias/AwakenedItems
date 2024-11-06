@@ -26,7 +26,7 @@ Generally the following items should work just as you'd expect:
 - Melee weapons (swords, maces, axes, etc.)
 - Tools used for breaking blocks (pickaxes, axes, hoes, etc.)
 - Armor
-- Bows
+- Bows and crossbows
 - Tridents as melee weapons (they don't do more damage when thrown)
 
 ## Roadmap
