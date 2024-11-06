@@ -33,7 +33,6 @@ Generally the following items should work just as you'd expect:
 
 In arbitrary order.
 
-- crossbow support
 - trident support
 - support for other item types
 - soulstuff recipe changing depending on what other mods are present
