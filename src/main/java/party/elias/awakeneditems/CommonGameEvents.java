@@ -196,7 +196,7 @@ public class CommonGameEvents {
     public static void onAttack(LivingIncomingDamageEvent event) {
         if (event.getSource().getWeaponItem() != null) {
             ItemStack weapon = event.getSource().getWeaponItem();
-            if (weapon.has(AwakenedItems.AWAKENED_ITEM_COMPONENT) && weapon.is(Tags.Items.MELEE_WEAPON_TOOLS)) {
+            if (weapon.has(AwakenedItems.AWAKENED_ITEM_COMPONENT) && AwakenedItemType.MELEE_WEAPON.checkItem(weapon)) {
                 AwakenedItemBehavior.maybeSpeakToOwner(0.01, weapon, event.getEntity().level(), "weaponattack", 2000, event.getEntity().getType().getDescription());
                 AwakenedItemBehavior.addXp(weapon, 2, event.getEntity().level());
             }
@@ -221,9 +221,7 @@ public class CommonGameEvents {
         ItemStack item = event.getPlayer().getMainHandItem();
 
         if (item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT) != null) {
-            if (item.is(Tags.Items.TOOLS)
-                && (!item.is(Tags.Items.MELEE_WEAPON_TOOLS) || item.is(ItemTags.AXES))
-                && !item.is(Tags.Items.RANGED_WEAPON_TOOLS)) {
+            if (AwakenedItemType.BREAKING_TOOL.checkItem(item)) {
                 AwakenedItemBehavior.maybeSpeakToOwner(0.005, item, (Level) event.getLevel(), "toolmine", 2000, event.getState().getBlock().getName());
                 AwakenedItemBehavior.addXp(item, 1, event.getPlayer().level());
             }
