@@ -75,6 +75,16 @@ public class AwakenedItemBehavior {
         }
     }
 
+    public static void damaged(ItemStack itemStack, ServerLevel level) {
+        if ((double)itemStack.getDamageValue() / itemStack.getMaxDamage() > 0.95) {
+            speakToOwner(itemStack, level, "damaged", 2000);
+        }
+
+        if (itemStack.getDamageValue() == itemStack.getMaxDamage() - 2) {
+            speakToOwner(itemStack, level, "willdie", 0);
+        }
+    }
+
     public static void inventoryTick(ItemStack itemStack, LivingEntity entity) {
         AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
