@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -26,13 +26,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
@@ -59,17 +57,18 @@ public class CommonGameEvents {
         if (aiData != null) {
             if (aiData.heldByOwner()) {
                 if (AwakenedItemType.MELEE_WEAPON.checkItem(item)) {
+                    double baseDamage = Utils.getSummedAttributeModifiers(event.getDefaultModifiers(), Attributes.ATTACK_DAMAGE, AttributeModifier.Operation.ADD_VALUE);
 
                     event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(
-                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.add"),
-                                    (double) aiData.level() / 20.0 * 5.0,
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
+                                    (double) aiData.level() / 20.0 * Mth.floor( 4.0 + baseDamage / 2.0),
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.MAINHAND
                     );
 
-                    event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(
-                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai.mul"),
+                    event.addModifier(Attributes.ATTACK_SPEED, new AttributeModifier(
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
                                     (double) aiData.level() / 20.0,
                                     AttributeModifier.Operation.ADD_MULTIPLIED_BASE
                             ),
@@ -80,7 +79,7 @@ public class CommonGameEvents {
 
                     event.addModifier(Attributes.MINING_EFFICIENCY, new AttributeModifier(
                                     ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
-                                    (double) aiData.level() / 10.0,
+                                    aiData.level(),
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.MAINHAND
