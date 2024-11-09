@@ -4,11 +4,14 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.*;
@@ -88,7 +91,16 @@ public class AwakenedItemBehavior {
     public static void inventoryTick(ItemStack itemStack, LivingEntity entity) {
         AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
-        itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData.withHeldByOwner(entity.getUUID().equals(awakenedItemData.owner())));
+        awakenedItemData = awakenedItemData.withHeldByOwner(entity.getUUID().equals(awakenedItemData.owner()));
+        itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData);
+
+        if (awakenedItemData.heldByOwner()) {
+            IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
+
+            if (energyStorage != null) {
+                energyStorage.receiveEnergy(Mth.square(awakenedItemData.level() + 1), false);
+            }
+        }
 
         if (entity.level() instanceof ServerLevel serverLevel) {
             maybeSpeakToOwner(0.0005, itemStack, entity.level(), "random", 5000);
