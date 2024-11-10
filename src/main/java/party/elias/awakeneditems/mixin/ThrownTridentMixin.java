@@ -13,7 +13,7 @@ import party.elias.awakeneditems.AwakenedItems;
 @Mixin(ThrownTrident.class)
 public class ThrownTridentMixin {
 
-    @ModifyVariable(method = "onHitEntity", name = "f", at = @At(value = "STORE", ordinal = 0))
+    @ModifyVariable(method = "onHitEntity", ordinal = 0, at = @At(value = "STORE", ordinal = 0))
     private float modifyDamage(float value, EntityHitResult result) {
         ThrownTrident trident = ((ThrownTrident)(Object)this);
         Entity thrower = trident.getOwner();
