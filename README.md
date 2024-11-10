@@ -27,13 +27,16 @@ Generally the following items should work just as you'd expect:
 - Tools used for breaking blocks (pickaxes, axes, hoes, etc.)
 - Armor
 - Bows and crossbows
-- Tridents as melee weapons (they don't do more damage when thrown)
+- Tridents
+
+Additionally:
+
+- Items that store energy get slowly recharged
 
 ## Roadmap
 
 In arbitrary order.
 
-- trident support
 - support for other item types
 - soulstuff recipe changing depending on what other mods are present
 - more personalities
