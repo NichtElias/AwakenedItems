@@ -20,6 +20,9 @@ public enum AwakenedItemType {
     ),
     ARMOR(5, Set.of(), item ->
             item.is(Tags.Items.ARMORS)
+    ),
+    SHIELD(5, Set.of(), item ->
+            item.is(Tags.Items.TOOLS_SHIELD)
     );
 
 

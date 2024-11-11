@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import party.elias.awakeneditems.AwakenedItemBehavior;
 import party.elias.awakeneditems.AwakenedItemData;
+import party.elias.awakeneditems.AwakenedItemType;
 import party.elias.awakeneditems.AwakenedItems;
 
 import java.util.function.Consumer;
@@ -24,7 +25,7 @@ public class ItemStackMixin {
         AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         if (awakenedItemData != null) {
-            if (entity.getRandom().nextDouble() < awakenedItemData.level() / 40.0) {
+            if (entity.getRandom().nextDouble() < awakenedItemData.level() / (AwakenedItemType.SHIELD.checkItem(itemStack) ? 20.0 : 40.0)) {
                 damage = 0;
             }
         }
