@@ -166,7 +166,7 @@ public class CommonGameEvents {
                         || ability == ItemAbilities.FIRESTARTER_LIGHT
                         || ability == ItemAbilities.SHEARS_TRIM) {
                     AwakenedItemBehavior.maybeSpeakToOwner(0.01, item, event.getContext().getLevel(), "tooluse", 2000, event.getFinalState().getBlock().getName());
-                    AwakenedItemBehavior.addXp(item, 1, event.getContext().getLevel());
+                    AwakenedItemBehavior.addXp(item, Config.Level.xpPerToolUse, event.getContext().getLevel());
                 }
             }
         }
@@ -200,7 +200,7 @@ public class CommonGameEvents {
             ItemStack weapon = event.getSource().getWeaponItem();
             if (weapon.has(AwakenedItems.AWAKENED_ITEM_COMPONENT) && AwakenedItemType.MELEE_WEAPON.checkItem(weapon)) {
                 AwakenedItemBehavior.maybeSpeakToOwner(0.01, weapon, event.getEntity().level(), "weaponattack", 2000, event.getEntity().getType().getDescription());
-                AwakenedItemBehavior.addXp(weapon, 2, event.getEntity().level());
+                AwakenedItemBehavior.addXp(weapon, Config.Level.xpPerMeleeAttack, event.getEntity().level());
             }
         }
     }
@@ -213,7 +213,7 @@ public class CommonGameEvents {
 
             if (slot.isArmor() && aiData != null) {
                 AwakenedItemBehavior.maybeSpeakToOwner(0.01, item, event.getEntity().level(), "armorprotect", 2000);
-                AwakenedItemBehavior.addXp(item, 4, event.getEntity().level());
+                AwakenedItemBehavior.addXp(item, Config.Level.xpPerArmorHit, event.getEntity().level());
             }
         }
     }
@@ -225,7 +225,7 @@ public class CommonGameEvents {
         if (item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT) != null) {
             if (AwakenedItemType.BREAKING_TOOL.checkItem(item)) {
                 AwakenedItemBehavior.maybeSpeakToOwner(0.005, item, (Level) event.getLevel(), "toolmine", 2000, event.getState().getBlock().getName());
-                AwakenedItemBehavior.addXp(item, 1, event.getPlayer().level());
+                AwakenedItemBehavior.addXp(item, Config.Level.xpPerBrokenBock, event.getPlayer().level());
             }
         }
     }
@@ -237,7 +237,7 @@ public class CommonGameEvents {
         AwakenedItemData awakenedItemData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         if (awakenedItemData != null) {
-            AwakenedItemBehavior.addXp(item, 4, event.getLevel());
+            AwakenedItemBehavior.addXp(item, Config.Level.xpPerShot, event.getLevel());
         }
     }
 

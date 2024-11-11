@@ -5,6 +5,15 @@
   "ai.awakeneditems.tooltip.owner": "Bound to %s",
   "emi.info.awakeneditems.awakening": "Any item can be awakened by dropping it on an anvil and then using soulstuff on the anvil.",
 
+  "awakeneditems.configuration.level": "Leveling",
+  "awakeneditems.configuration.level.xpBase": "XP base",
+  "awakeneditems.configuration.level.xpMultiplier": "XP multiplier",
+  "awakeneditems.configuration.level.xpPerBrokenBlock": "XP per broken block",
+  "awakeneditems.configuration.level.xpPerMeleeAttack": "XP per melee attack",
+  "awakeneditems.configuration.level.xpPerToolUse": "XP per tool use",
+  "awakeneditems.configuration.level.xpPerShot": "XP per shot",
+  "awakeneditems.configuration.level.xpPerArmorHit": "XP per armor hit",
+
   "chat.awakeneditems.aimsg.levelup.any.any": "I'm level %s now!",
   "chat.awakeneditems.aimsg.levelup.any.lazy": "Finally reached level %s.",
   "chat.awakeneditems.aimsg.levelup.any.lazy.1": "So much work just to get to level %s? I feel scammed.",

@@ -33,7 +33,7 @@ public class AwakenedItemBehavior {
     }
 
     public static int getRequiredXp(int currentLevel) {
-        return (int) (Math.pow(1.25, currentLevel) * 500);
+        return (int) (Math.pow(Config.Level.xpMultiplier, currentLevel) * Config.Level.xpBase);
     }
 
     public static void addXp(ItemStack stack, int amount, Level world) {
