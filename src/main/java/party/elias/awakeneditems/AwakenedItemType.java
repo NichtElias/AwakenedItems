@@ -23,6 +23,9 @@ public enum AwakenedItemType {
     ),
     SHIELD(5, Set.of(), item ->
             item.is(Tags.Items.TOOLS_SHIELD)
+    ),
+    FISHING_ROD(5, Set.of(), item ->
+            item.is(Tags.Items.TOOLS_FISHING_ROD)
     );
 
 

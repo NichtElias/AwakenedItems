@@ -38,6 +38,7 @@ public class Config {
     private static final ModConfigSpec.IntValue LEVEL_XP_PER_TOOL_USE;
     private static final ModConfigSpec.IntValue LEVEL_XP_PER_SHOT;
     private static final ModConfigSpec.IntValue LEVEL_XP_PER_ARMOR_HIT;
+    private static final ModConfigSpec.IntValue LEVEL_XP_PER_FISH;
 
     static final ModConfigSpec SPEC;
 
@@ -66,6 +67,9 @@ public class Config {
         LEVEL_XP_PER_ARMOR_HIT = BUILDER.comment("The amount of xp an armor piece gains per damage you take")
                 .translation(TL_KEY + "level.xpPerArmorHit")
                 .defineInRange("xpPerArmorHit", 4, 0, Integer.MAX_VALUE);
+        LEVEL_XP_PER_FISH = BUILDER.comment("The amount of xp a fishing rod gains each time you fish")
+                .translation(TL_KEY + "level.xpPerFish")
+                .defineInRange("xpPerFish", 4, 0, Integer.MAX_VALUE);
 
         BUILDER.pop();
 
@@ -81,6 +85,7 @@ public class Config {
         public static int xpPerToolUse;
         public static int xpPerShot;
         public static int xpPerArmorHit;
+        public static int xpPerFish;
     }
 
     /*
@@ -106,6 +111,7 @@ public class Config {
         Level.xpPerToolUse = LEVEL_XP_PER_TOOL_USE.get();
         Level.xpPerShot = LEVEL_XP_PER_SHOT.get();
         Level.xpPerArmorHit = LEVEL_XP_PER_ARMOR_HIT.get();
+        Level.xpPerFish = LEVEL_XP_PER_FISH.get();
 
         /*
         logDirtBlock = LOG_DIRT_BLOCK.get();
