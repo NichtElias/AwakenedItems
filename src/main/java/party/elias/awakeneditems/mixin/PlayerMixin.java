@@ -11,9 +11,8 @@ import party.elias.awakeneditems.AwakenedItems;
 
 @Mixin(Player.class)
 public class PlayerMixin {
-    @WrapOperation(method = "blockUsingShield", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;disableShield()V"))
-    private void blockUsingShield(Player instance, Operation<Void> original) {
-        ItemStack itemStack = instance.getUseItem();
+    @WrapOperation(method = "blockUsingShield", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;disableShield(Lnet/minecraft/world/item/ItemStack;)V"))
+    private void blockUsingShield(Player instance, ItemStack itemStack, Operation<Void> original) {
         AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         if (awakenedItemData != null) {
@@ -22,6 +21,6 @@ public class PlayerMixin {
             }
         }
 
-        original.call(instance);
+        original.call(instance, itemStack);
     }
 }
