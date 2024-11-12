@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -37,10 +38,7 @@ import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
-import net.neoforged.neoforge.event.entity.player.ArrowLooseEvent;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
@@ -102,6 +100,15 @@ public class CommonGameEvents {
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.ARMOR
+                    );
+                }
+                if (AwakenedItemType.FISHING_ROD.checkItem(item)) {
+
+                    event.addModifier(Attributes.LUCK, new AttributeModifier(
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
+                                    (double) aiData.level() / 20.0 * 5,
+                                    AttributeModifier.Operation.ADD_VALUE),
+                            EquipmentSlotGroup.MAINHAND
                     );
                 }
             }
@@ -166,6 +173,17 @@ public class CommonGameEvents {
                     AwakenedItemBehavior.addXp(item, Config.Level.xpPerToolUse, event.getContext().getLevel());
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onFish(ItemFishedEvent event) {
+        InteractionHand rodHand = event.getEntity().getUsedItemHand();
+        ItemStack rod = event.getEntity().getItemInHand(rodHand);
+        AwakenedItemData awakenedItemData = rod.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+
+        if (awakenedItemData != null) {
+            AwakenedItemBehavior.addXp(rod, Config.Level.xpPerFish, event.getEntity().level());
         }
     }
 
