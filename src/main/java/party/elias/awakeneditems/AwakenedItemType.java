@@ -26,6 +26,9 @@ public enum AwakenedItemType {
     ),
     FISHING_ROD(5, Set.of(), item ->
             item.is(Tags.Items.TOOLS_FISHING_ROD)
+    ),
+    CURIO(5, Set.of(), item ->
+            item.is(AwakenedItems.TAG_CURIOS)
     );
 
 

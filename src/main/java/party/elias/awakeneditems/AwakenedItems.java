@@ -4,6 +4,8 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
@@ -35,6 +37,8 @@ public class AwakenedItems {
     public static final String MODID = "awakeneditems";
 
     public static final Logger LOGGER = LogUtils.getLogger();
+
+    public static final TagKey<Item> TAG_CURIOS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "curios"));
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
 
