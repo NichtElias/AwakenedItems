@@ -25,6 +25,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -110,6 +111,23 @@ public class CommonGameEvents {
                                     AttributeModifier.Operation.ADD_VALUE),
                             EquipmentSlotGroup.MAINHAND
                     );
+                }
+                if (AwakenedItemType.CURIO.checkItem(item)) {
+
+                    ItemAttributeModifiers modifiers = event.getDefaultModifiers();
+
+                    for (ItemAttributeModifiers.Entry modifierEntry: modifiers.modifiers()) {
+
+                        event.addModifier(modifierEntry.attribute(), new AttributeModifier(
+                                        ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "curio." + modifierEntry.modifier().id().toLanguageKey()),
+                                        (double) aiData.level() / 10.0 * modifierEntry.modifier().amount(),
+                                        modifierEntry.modifier().operation()
+                                ),
+                                modifierEntry.slot()
+                        );
+
+                    }
+
                 }
             }
         }
