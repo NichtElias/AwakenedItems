@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import party.elias.awakeneditems.AwakenedItemData;
 import party.elias.awakeneditems.AwakenedItems;
+import party.elias.awakeneditems.Utils;
 
 @Mixin(ThrownTrident.class)
 public class ThrownTridentMixin {
@@ -22,7 +23,7 @@ public class ThrownTridentMixin {
         AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         if (awakenedItemData != null && awakenedItemData.owner().equals(thrower.getUUID())) {
-            value += (float) (awakenedItemData.level() / 20.0 * 12.0);
+            value += (float) (awakenedItemData.level() / 20.0 * 12.0 * Utils.getPower(thrower));
         }
 
         return value;

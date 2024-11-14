@@ -1,6 +1,8 @@
 package party.elias.awakeneditems;
 
 import net.minecraft.core.Holder;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -9,11 +11,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.level.Level;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 
 public class Utils {
     public static double getSummedAttributeModifiers(ItemAttributeModifiers modifiers, Holder<Attribute> attribute, AttributeModifier.Operation operation) {
@@ -50,5 +53,44 @@ public class Utils {
                 }
             }
         }
+    }
+
+    public static ServerPlayer getPlayerByUUIDFromServer(MinecraftServer server, UUID uuid) {
+        for (ServerPlayer player: server.getPlayerList().getPlayers()) {
+            if (player.getUUID().equals(uuid)) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public static double getOwnerPower(ItemStack itemStack) {
+        AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+
+        if (awakenedItemData != null) {
+            Player player = null;
+
+            if (CommonGameEvents.SERVER != null) {
+                player = getPlayerByUUIDFromServer(CommonGameEvents.SERVER, awakenedItemData.owner());
+            } else {
+                Level level = ClientUtils.getLevel();
+
+                if (level != null) {
+                    player = level.getPlayerByUUID(awakenedItemData.owner());
+                }
+            }
+
+            if (player != null) {
+                return player.getAttributeValue(AwakenedItems.AI_POWER_ATTRIBUTE);
+            }
+        }
+
+        return 1;
+    }
+
+    public static double getPower(Entity entity) {
+        if (entity instanceof LivingEntity livingEntity)
+            return livingEntity.getAttributeValue(AwakenedItems.AI_POWER_ATTRIBUTE);
+        return 1;
     }
 }
