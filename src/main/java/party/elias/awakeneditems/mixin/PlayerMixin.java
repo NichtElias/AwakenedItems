@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import party.elias.awakeneditems.AwakenedItemData;
 import party.elias.awakeneditems.AwakenedItems;
+import party.elias.awakeneditems.Utils;
 
 @Mixin(Player.class)
 public class PlayerMixin {
@@ -17,7 +18,7 @@ public class PlayerMixin {
         AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         if (awakenedItemData != null) {
-            if (instance.getRandom().nextDouble() < awakenedItemData.level() / 20.0) {
+            if (instance.getRandom().nextDouble() < awakenedItemData.level() / 20.0 * Utils.getPower(instance)) {
                 return;
             }
         }

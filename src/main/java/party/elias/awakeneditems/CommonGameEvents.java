@@ -6,6 +6,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -41,12 +43,20 @@ import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import java.util.List;
 
 @EventBusSubscriber(modid = AwakenedItems.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class CommonGameEvents {
+
+    public static MinecraftServer SERVER = null;
+
+    @SubscribeEvent
+    public static void onServerStarting(ServerStartingEvent event) {
+        SERVER = event.getServer();
+    }
 
     @SubscribeEvent
     public static void onItemAttributeModifier(ItemAttributeModifierEvent event) {
@@ -59,7 +69,7 @@ public class CommonGameEvents {
 
                     event.addModifier(Attributes.ATTACK_DAMAGE, new AttributeModifier(
                                     ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
-                                    (double) aiData.level() / 20.0 * Mth.floor( 4.0 + baseDamage / 2.0),
+                                    (double) aiData.level() / 20.0 * Mth.floor( 4.0 + baseDamage / 2.0) * Utils.getOwnerPower(item),
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.MAINHAND
@@ -67,7 +77,7 @@ public class CommonGameEvents {
 
                     event.addModifier(Attributes.ATTACK_SPEED, new AttributeModifier(
                                     ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
-                                    (double) aiData.level() / 20.0,
+                                    (double) aiData.level() / 20.0 * Utils.getOwnerPower(item),
                                     AttributeModifier.Operation.ADD_MULTIPLIED_BASE
                             ),
                             EquipmentSlotGroup.MAINHAND
@@ -77,7 +87,7 @@ public class CommonGameEvents {
 
                     event.addModifier(Attributes.MINING_EFFICIENCY, new AttributeModifier(
                                     ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
-                                    aiData.level(),
+                                    aiData.level() * Utils.getOwnerPower(item),
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.MAINHAND
@@ -89,7 +99,7 @@ public class CommonGameEvents {
 
                     event.addModifier(Attributes.ARMOR, new AttributeModifier(
                                     ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
-                                    (double) aiData.level() / 10.0 * baseArmor,
+                                    (double) aiData.level() / 10.0 * baseArmor * Utils.getOwnerPower(item),
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.ARMOR
@@ -97,7 +107,7 @@ public class CommonGameEvents {
 
                     event.addModifier(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(
                                     ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
-                                    (double) aiData.level() / 10.0 * baseToughness,
+                                    (double) aiData.level() / 10.0 * baseToughness * Utils.getOwnerPower(item),
                                     AttributeModifier.Operation.ADD_VALUE
                             ),
                             EquipmentSlotGroup.ARMOR
@@ -107,7 +117,7 @@ public class CommonGameEvents {
 
                     event.addModifier(Attributes.LUCK, new AttributeModifier(
                                     ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
-                                    (double) aiData.level() / 20.0 * 5,
+                                    (double) aiData.level() / 20.0 * 5 * Utils.getOwnerPower(item),
                                     AttributeModifier.Operation.ADD_VALUE),
                             EquipmentSlotGroup.MAINHAND
                     );
@@ -118,15 +128,26 @@ public class CommonGameEvents {
 
                     for (ItemAttributeModifiers.Entry modifierEntry: modifiers.modifiers()) {
 
+                        if (modifierEntry.attribute().is(AwakenedItems.AI_POWER_ATTRIBUTE.getId()))
+                            continue;
+
                         event.addModifier(modifierEntry.attribute(), new AttributeModifier(
                                         ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "curio." + modifierEntry.modifier().id().toLanguageKey()),
-                                        (double) aiData.level() / 10.0 * modifierEntry.modifier().amount(),
+                                        (double) aiData.level() / 10.0 * modifierEntry.modifier().amount() * Utils.getOwnerPower(item),
                                         modifierEntry.modifier().operation()
                                 ),
                                 modifierEntry.slot()
                         );
 
                     }
+
+                    event.addModifier(AwakenedItems.AI_POWER_ATTRIBUTE, new AttributeModifier(
+                                ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
+                                (double) aiData.level() / 50.0,
+                                AttributeModifier.Operation.ADD_VALUE
+                            ),
+                            EquipmentSlotGroup.ANY
+                    );
 
                 }
             }
@@ -335,7 +356,7 @@ public class CommonGameEvents {
                     Entity owner = projectile.getOwner();
 
                     if (owner != null && owner.getUUID().equals(awakenedItemData.owner())) {
-                        projectile.setDeltaMovement(projectile.getDeltaMovement().scale(1 + awakenedItemData.level() / 10.0));
+                        projectile.setDeltaMovement(projectile.getDeltaMovement().scale(1 + awakenedItemData.level() / 10.0 * Utils.getPower(owner)));
                     }
                 }
             }
