@@ -1,6 +1,9 @@
 package party.elias.awakeneditems;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.Tool;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.Tags;
 
@@ -10,13 +13,14 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public enum AwakenedItemType {
-    BREAKING_TOOL(5, Set.of(), item ->
-            item.canPerformAction(ItemAbilities.PICKAXE_DIG) || item.canPerformAction(ItemAbilities.SHOVEL_DIG)
-                    || item.canPerformAction(ItemAbilities.AXE_DIG) || item.canPerformAction(ItemAbilities.HOE_DIG)
-                    || item.canPerformAction(ItemAbilities.SHEARS_DIG)
+    BREAKING_TOOL(5, Set.of(), item -> {
+            Tool tool = item.get(DataComponents.TOOL);
+            return ((tool != null) && !tool.rules().isEmpty())
+                    || item.is(ItemTags.PICKAXES) || item.is(ItemTags.SHOVELS) || item.is(ItemTags.AXES);
+        }
     ),
     MELEE_WEAPON(5, Set.of(), item ->
-            item.is(Tags.Items.MELEE_WEAPON_TOOLS)
+            item.is(Tags.Items.MELEE_WEAPON_TOOLS) || item.is(ItemTags.SWORDS)
     ),
     ARMOR(5, Set.of(), item ->
             item.is(Tags.Items.ARMORS)
