@@ -17,6 +17,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
@@ -26,6 +27,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -34,6 +36,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.slf4j.Logger;
+import party.elias.awakeneditems.compat.CuriosEvents;
 
 import java.util.function.Supplier;
 
@@ -86,6 +89,10 @@ public class AwakenedItems {
 
         if (FMLEnvironment.dist != Dist.DEDICATED_SERVER)
             modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+
+        if (ModList.get().isLoaded("curios")) {
+            CuriosEvents.init(NeoForge.EVENT_BUS);
+        }
     }
 
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
