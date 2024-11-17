@@ -54,6 +54,19 @@ public enum AwakenedItemType {
         return predicate.test(item);
     }
 
+    public boolean checkItemOnly(ItemStack item) {
+        if (!checkItem(item))
+            return false;
+
+        for (AwakenedItemType type: values()) {
+            if (type.checkItem(item) && type != this) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public static List<AwakenedItemType> getItemTypes(ItemStack item) {
         List<AwakenedItemType> types = new ArrayList<>();
 

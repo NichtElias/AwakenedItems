@@ -100,6 +100,12 @@ public class AwakenedItemBehavior {
             if (energyStorage != null) {
                 energyStorage.receiveEnergy(Mth.square(awakenedItemData.level() + 1), false);
             }
+
+            if (AwakenedItemType.CURIO.checkItemOnly(itemStack)) {
+                if (entity.level().getGameTime() % 100 == 0) {
+                    addXp(itemStack, Config.Level.xpPerCurioHectotick, entity.level());
+                }
+            }
         }
 
         if (entity.level() instanceof ServerLevel serverLevel) {

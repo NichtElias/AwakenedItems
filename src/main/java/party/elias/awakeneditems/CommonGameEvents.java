@@ -7,7 +7,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -27,7 +26,6 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -122,34 +120,7 @@ public class CommonGameEvents {
                             EquipmentSlotGroup.MAINHAND
                     );
                 }
-                if (AwakenedItemType.CURIO.checkItem(item)) {
 
-                    ItemAttributeModifiers modifiers = event.getDefaultModifiers();
-
-                    for (ItemAttributeModifiers.Entry modifierEntry: modifiers.modifiers()) {
-
-                        if (modifierEntry.attribute().is(AwakenedItems.AI_POWER_ATTRIBUTE.getId()))
-                            continue;
-
-                        event.addModifier(modifierEntry.attribute(), new AttributeModifier(
-                                        ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "curio." + modifierEntry.modifier().id().toLanguageKey()),
-                                        (double) aiData.level() / 10.0 * modifierEntry.modifier().amount() * Utils.getOwnerPower(item),
-                                        modifierEntry.modifier().operation()
-                                ),
-                                modifierEntry.slot()
-                        );
-
-                    }
-
-                    event.addModifier(AwakenedItems.AI_POWER_ATTRIBUTE, new AttributeModifier(
-                                ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
-                                (double) aiData.level() / 50.0,
-                                AttributeModifier.Operation.ADD_VALUE
-                            ),
-                            EquipmentSlotGroup.ANY
-                    );
-
-                }
             }
         }
     }

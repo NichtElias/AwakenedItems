@@ -3,7 +3,11 @@
   "item.awakeneditems.soulstuff": "Soulstuff",
   "ai.awakeneditems.tooltip": "Awakened [%s]",
   "ai.awakeneditems.tooltip.owner": "Bound to %s",
+  "attribute.awakeneditems.ai_power": "Awakened Item Power",
+
   "emi.info.awakeneditems.awakening": "Any item can be awakened by dropping it on an anvil and then using soulstuff on the anvil.",
+
+  "curios.modifiers.heart_amulet": "When equipped:",
 
   "awakeneditems.configuration.level": "Leveling",
   "awakeneditems.configuration.level.xpBase": "XP base",
@@ -13,6 +17,8 @@
   "awakeneditems.configuration.level.xpPerToolUse": "XP per tool use",
   "awakeneditems.configuration.level.xpPerShot": "XP per shot",
   "awakeneditems.configuration.level.xpPerArmorHit": "XP per armor hit",
+  "awakeneditems.configuration.level.xpPerFish": "XP per fished item",
+  "awakeneditems.configuration.level.xpPerCurioHectotick": "XP per 100 ticks for curios",
 
   "chat.awakeneditems.aimsg.levelup.any.any": "I'm level %s now!",
   "chat.awakeneditems.aimsg.levelup.any.lazy": "Finally reached level %s.",

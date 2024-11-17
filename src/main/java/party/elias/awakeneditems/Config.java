@@ -39,6 +39,7 @@ public class Config {
     private static final ModConfigSpec.IntValue LEVEL_XP_PER_SHOT;
     private static final ModConfigSpec.IntValue LEVEL_XP_PER_ARMOR_HIT;
     private static final ModConfigSpec.IntValue LEVEL_XP_PER_FISH;
+    private static final ModConfigSpec.IntValue LEVEL_XP_PER_CURIO_HECTOTICK;
 
     static final ModConfigSpec SPEC;
 
@@ -70,6 +71,9 @@ public class Config {
         LEVEL_XP_PER_FISH = BUILDER.comment("The amount of xp a fishing rod gains each time you fish")
                 .translation(TL_KEY + "level.xpPerFish")
                 .defineInRange("xpPerFish", 4, 0, Integer.MAX_VALUE);
+        LEVEL_XP_PER_CURIO_HECTOTICK = BUILDER.comment("The amount of xp a curio gains every 100 ticks while in the owner's inventory")
+                .translation(TL_KEY + "level.xpPerCurioHectotick")
+                .defineInRange("xpPerCurioHectotick", 2, 0, Integer.MAX_VALUE);
 
         BUILDER.pop();
 
@@ -86,6 +90,7 @@ public class Config {
         public static int xpPerShot;
         public static int xpPerArmorHit;
         public static int xpPerFish;
+        public static int xpPerCurioHectotick;
     }
 
     /*
@@ -112,6 +117,7 @@ public class Config {
         Level.xpPerShot = LEVEL_XP_PER_SHOT.get();
         Level.xpPerArmorHit = LEVEL_XP_PER_ARMOR_HIT.get();
         Level.xpPerFish = LEVEL_XP_PER_FISH.get();
+        Level.xpPerCurioHectotick = LEVEL_XP_PER_CURIO_HECTOTICK.get();
 
         /*
         logDirtBlock = LOG_DIRT_BLOCK.get();
