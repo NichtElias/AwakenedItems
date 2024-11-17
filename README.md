@@ -15,6 +15,7 @@
 - They don't like being picked up by mobs and will defend themselves.
 - They're loyal to their owner and won't work as well for other players.
 - They don't despawn. They may get lonely though.
+- They take less durability damage, scaling with their level.
 
 ## Supported Items
 
@@ -28,10 +29,13 @@ Generally the following items should work just as you'd expect:
 - Armor
 - Bows and crossbows
 - Tridents
+- Shields
+- Fishing rods
 
 Additionally:
 
-- Items that store energy get slowly recharged
+- Items that store energy get slowly recharged.
+- Curios give you "awakened item power" when equipped, making your other awakened items stronger.
 
 ## Roadmap
 
