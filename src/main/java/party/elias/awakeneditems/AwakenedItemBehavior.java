@@ -43,14 +43,23 @@ public class AwakenedItemBehavior {
             data = data.withXp(data.xp() + amount);
 
             while (data.xp() >= getRequiredXp(data.level())) {
-                data = data.withXp(data.xp() - getRequiredXp(data.level())).withLevel(data.level() + 1);
+                if (!isMilestoneLevel(data.level() + 1)) {
+                    data = data.withXp(data.xp() - getRequiredXp(data.level())).withLevel(data.level() + 1);
 
-                stack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, data);
-                AwakenedItemBehavior.speakToOwner(stack, world, "levelup", 0, Component.literal(String.valueOf(data.level())));
+                    stack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, data);
+                    AwakenedItemBehavior.speakToOwner(stack, world, "levelup", 0, Component.literal(String.valueOf(data.level())));
+                } else {
+                    // tell player that milestone level requirements need to be fulfilled
+                    break;
+                }
             }
 
             stack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, data);
         }
+    }
+
+    private static boolean isMilestoneLevel(int level) {
+        return level == 10 || level == 20;
     }
 
     public static void speakToOwner(ItemStack item, Level world, String trigger, int priority, Component... args) {
