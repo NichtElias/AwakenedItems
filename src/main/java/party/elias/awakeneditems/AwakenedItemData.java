@@ -65,11 +65,11 @@ public record AwakenedItemData(UUID owner, int level, int xp, Flags flags, List<
         }
 
         public boolean get(Flag flag) {
-            return (flags & (2 >> flag.ordinal())) != 0;
+            return (flags & (1 >> flag.ordinal())) != 0;
         }
 
         public Flags set(Flag flag, boolean value) {
-            int mask = 2 << flag.ordinal();
+            int mask = 1 << flag.ordinal();
             if (value)
                 return new Flags(flags | mask);
             else
@@ -79,6 +79,19 @@ public record AwakenedItemData(UUID owner, int level, int xp, Flags flags, List<
         public enum Flag {
             HELD_BY_OWNER,
             MILESTONE_REQUIREMENTS;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Flags flags1 = (Flags) o;
+            return flags == flags1.flags;
+        }
+
+        @Override
+        public int hashCode() {
+            return flags;
         }
     }
 }
