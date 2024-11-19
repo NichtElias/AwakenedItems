@@ -3,6 +3,7 @@ package party.elias.awakeneditems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -332,6 +333,13 @@ public class CommonGameEvents {
                 }
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onAdvancementEarn(AdvancementEvent.AdvancementEarnEvent event) {
+
+
+
     }
 
     @SubscribeEvent

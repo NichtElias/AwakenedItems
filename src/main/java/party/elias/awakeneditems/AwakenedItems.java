@@ -1,9 +1,11 @@
 package party.elias.awakeneditems;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -31,10 +33,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.registries.*;
 import org.slf4j.Logger;
 import party.elias.awakeneditems.compat.CuriosEvents;
 
@@ -75,6 +74,8 @@ public class AwakenedItems {
 
     public static final DeferredHolder<Attribute, Attribute> AI_POWER_ATTRIBUTE = ATTRIBUTES.register("ai_power",
             () -> new RangedAttribute("attribute." + MODID + ".ai_power", 1, -Double.MAX_VALUE, Double.MAX_VALUE).setSyncable(true));
+
+    public static final ResourceKey<Registry<MilestoneLevel>> MILESTONE_LEVEL_REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MODID, "milestone_levels"));
 
     public AwakenedItems(IEventBus modEventBus, ModContainer modContainer) {
 
@@ -126,6 +127,15 @@ public class AwakenedItems {
             for (EntityType<? extends LivingEntity> entityType: event.getTypes()) {
                 event.add(entityType, AI_POWER_ATTRIBUTE);
             }
+        }
+
+        @SubscribeEvent
+        public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
+            event.dataPackRegistry(
+                    MILESTONE_LEVEL_REGISTRY_KEY,
+                    MilestoneLevel.CODEC,
+                    MilestoneLevel.CODEC
+            );
         }
     }
 }

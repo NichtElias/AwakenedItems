@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public record AwakenedItemData(UUID owner, int level, int xp, boolean heldByOwner, List<PersonalityTrait> personality) {
+public record AwakenedItemData(UUID owner, int level, int xp, Flags flags, List<PersonalityTrait> personality) {
 
     public AwakenedItemData(UUID owner, List<PersonalityTrait> personality) {
-        this(owner, 0, 0, true, personality);
+        this(owner, 0, 0, new Flags(0), personality);
     }
 
     public static final Codec<AwakenedItemData> CODEC = RecordCodecBuilder.create(instance ->
@@ -23,7 +23,7 @@ public record AwakenedItemData(UUID owner, int level, int xp, boolean heldByOwne
                     UUIDUtil.CODEC.fieldOf("owner").forGetter(AwakenedItemData::owner),
                     Codec.INT.fieldOf("level").forGetter(AwakenedItemData::level),
                     Codec.INT.fieldOf("xp").forGetter(AwakenedItemData::xp),
-                    Codec.BOOL.fieldOf("heldByOwner").forGetter(AwakenedItemData::heldByOwner),
+                    Flags.CODEC.optionalFieldOf("flags", new Flags(0)).forGetter(AwakenedItemData::flags),
                     Codec.list(PersonalityTrait.CODEC).fieldOf("personality").forGetter(AwakenedItemData::personality)
             ).apply(instance, AwakenedItemData::new)
     );
@@ -32,20 +32,53 @@ public record AwakenedItemData(UUID owner, int level, int xp, boolean heldByOwne
             UUIDUtil.STREAM_CODEC, AwakenedItemData::owner,
             ByteBufCodecs.INT, AwakenedItemData::level,
             ByteBufCodecs.INT, AwakenedItemData::xp,
-            ByteBufCodecs.BOOL, AwakenedItemData::heldByOwner,
+            Flags.STREAM_CODEC, AwakenedItemData::flags,
             PersonalityTrait.STREAM_CODEC.apply(ByteBufCodecs.list()), AwakenedItemData::personality,
             AwakenedItemData::new
     );
 
     public AwakenedItemData withLevel(int level) {
-        return new AwakenedItemData(owner, level, xp, heldByOwner, personality);
+        return new AwakenedItemData(owner, level, xp, flags, personality);
     }
 
     public AwakenedItemData withXp(int xp) {
-        return new AwakenedItemData(owner, level, xp, heldByOwner, personality);
+        return new AwakenedItemData(owner, level, xp, flags, personality);
     }
 
     public AwakenedItemData withHeldByOwner(boolean heldByOwner) {
-        return new AwakenedItemData(owner, level, xp, heldByOwner, personality);
+        return new AwakenedItemData(owner, level, xp, flags.set(Flags.Flag.HELD_BY_OWNER, heldByOwner), personality);
+    }
+
+    public boolean heldByOwner() {
+        return flags.get(Flags.Flag.HELD_BY_OWNER);
+    }
+
+    public static class Flags {
+
+        static final Codec<Flags> CODEC = Codec.INT.xmap(Flags::new, codecFlags -> codecFlags.flags);
+        static final StreamCodec<ByteBuf, Flags> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
+
+        private final int flags;
+
+        Flags(int flags) {
+            this.flags = flags;
+        }
+
+        public boolean get(Flag flag) {
+            return (flags & (2 >> flag.ordinal())) != 0;
+        }
+
+        public Flags set(Flag flag, boolean value) {
+            int mask = 2 << flag.ordinal();
+            if (value)
+                return new Flags(flags | mask);
+            else
+                return new Flags(flags & ~mask);
+        }
+
+        public enum Flag {
+            HELD_BY_OWNER,
+            MILESTONE_REQUIREMENTS;
+        }
     }
 }

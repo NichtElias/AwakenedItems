@@ -20,6 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Utils {
     public static double getSummedAttributeModifiers(ItemAttributeModifiers modifiers, Holder<Attribute> attribute, AttributeModifier.Operation operation) {
@@ -113,5 +116,20 @@ public class Utils {
         if (entity instanceof LivingEntity livingEntity)
             return livingEntity.getAttributeValue(AwakenedItems.AI_POWER_ATTRIBUTE);
         return 1;
+    }
+
+    public static void withAwakenedItemData(ItemStack stack, Consumer<AwakenedItemData> consumer) {
+        AwakenedItemData awakenedItemData = stack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+        if (awakenedItemData != null) {
+            consumer.accept(awakenedItemData);
+        }
+    }
+
+    public static boolean checkAwakenedItem(ItemStack itemStack, Predicate<AwakenedItemData> predicate) {
+        AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+        if (awakenedItemData != null) {
+            return predicate.test(awakenedItemData);
+        }
+        return false;
     }
 }

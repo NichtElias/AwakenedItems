@@ -2,6 +2,7 @@ package party.elias.awakeneditems;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Tool;
 import net.neoforged.neoforge.common.ItemAbilities;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public enum AwakenedItemType {
+public enum AwakenedItemType implements StringRepresentable {
     BREAKING_TOOL(5, Set.of(), item -> {
             Tool tool = item.get(DataComponents.TOOL);
             return ((tool != null) && !tool.rules().isEmpty())
@@ -85,5 +86,10 @@ public enum AwakenedItemType {
 
     private static boolean emptyPredicate(ItemStack item) {
         return false;
+    }
+
+    @Override
+    public String getSerializedName() {
+        return String.valueOf(this).toLowerCase();
     }
 }
