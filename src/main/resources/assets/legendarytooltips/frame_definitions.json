@@ -1,0 +1,12 @@
+{
+  "definitions": [
+    {
+      "image": "awakeneditems:textures/gui/tooltip_borders.png",
+      "index": 1,
+      "startColor": "aqua",
+      "endColor": "dark aqua",
+      "bgColor": "101820",
+      "selectors": ["&awakeneditems:awakened_item"]
+    }
+  ]
+}
