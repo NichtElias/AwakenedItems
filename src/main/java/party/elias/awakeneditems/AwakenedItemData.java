@@ -49,8 +49,16 @@ public record AwakenedItemData(UUID owner, int level, int xp, Flags flags, List<
         return new AwakenedItemData(owner, level, xp, flags.set(Flags.Flag.HELD_BY_OWNER, heldByOwner), personality);
     }
 
+    public AwakenedItemData withFlagSet(Flags.Flag flag, boolean value) {
+        return new AwakenedItemData(owner, level, xp, flags.set(flag, value), personality);
+    }
+
     public boolean heldByOwner() {
         return flags.get(Flags.Flag.HELD_BY_OWNER);
+    }
+
+    public boolean isFlagSet(Flags.Flag flag) {
+        return flags.get(flag);
     }
 
     public static class Flags {
@@ -65,7 +73,7 @@ public record AwakenedItemData(UUID owner, int level, int xp, Flags flags, List<
         }
 
         public boolean get(Flag flag) {
-            return (flags & (1 >> flag.ordinal())) != 0;
+            return (flags & (1 << flag.ordinal())) != 0;
         }
 
         public Flags set(Flag flag, boolean value) {
@@ -78,6 +86,7 @@ public record AwakenedItemData(UUID owner, int level, int xp, Flags flags, List<
 
         public enum Flag {
             HELD_BY_OWNER,
+            MILESTONE_XP,
             MILESTONE_REQUIREMENTS;
         }
 

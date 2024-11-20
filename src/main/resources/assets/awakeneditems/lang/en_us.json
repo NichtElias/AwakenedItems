@@ -20,6 +20,8 @@
   "awakeneditems.configuration.level.xpPerFish": "XP per fished item",
   "awakeneditems.configuration.level.xpPerCurioHectotick": "XP per 100 ticks for curios",
 
+  "chat.awakeneditems.aimsg.advance-xp.any.any": "Pick up a diamond.",
+  "chat.awakeneditems.aimsg.advance-requirements.any.any": "Now go make me gud.",
   "chat.awakeneditems.aimsg.levelup.any.any": "I'm level %s now!",
   "chat.awakeneditems.aimsg.levelup.any.lazy": "Finally reached level %s.",
   "chat.awakeneditems.aimsg.levelup.any.lazy.1": "So much work just to get to level %s? I feel scammed.",

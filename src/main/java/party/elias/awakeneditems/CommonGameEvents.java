@@ -338,8 +338,7 @@ public class CommonGameEvents {
     @SubscribeEvent
     public static void onAdvancementEarn(AdvancementEvent.AdvancementEarnEvent event) {
 
-
-
+        MilestoneLevel.triggerAll(event.getAdvancement(), event.getEntity());
     }
 
     @SubscribeEvent
