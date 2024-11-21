@@ -1,6 +1,7 @@
 {
   "itemGroup.awakeneditems": "Awakened Items",
   "item.awakeneditems.soulstuff": "Soulstuff",
+  "block.awakeneditems.soulforge": "Soulforge",
   "ai.awakeneditems.tooltip": "Awakened [%s]",
   "ai.awakeneditems.tooltip.owner": "Bound to %s",
   "attribute.awakeneditems.ai_power": "Awakened Item Power",
