@@ -18,6 +18,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -64,9 +65,10 @@ public class AwakenedItems {
 
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, MODID);
 
-    public static final DeferredBlock<Block> SOULFORGE_BLOCK = BLOCKS.register("soulforge", () ->
-            new Block(BlockBehaviour.Properties.of().destroyTime(10).explosionResistance(10).sound(SoundType.ANVIL).noOcclusion())
-    );
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
+
+
+    public static final DeferredBlock<Block> SOULFORGE_BLOCK = BLOCKS.register("soulforge", SoulforgeBlock::new);
 
     public static final DeferredItem<Item> SOULSTUFF_ITEM = ITEMS.registerSimpleItem("soulstuff", new Item.Properties());
 
@@ -86,6 +88,13 @@ public class AwakenedItems {
     public static final DeferredHolder<Attribute, Attribute> AI_POWER_ATTRIBUTE = ATTRIBUTES.register("ai_power",
             () -> new RangedAttribute("attribute." + MODID + ".ai_power", 1, -Double.MAX_VALUE, Double.MAX_VALUE).setSyncable(true));
 
+    public static final Supplier<BlockEntityType<SoulforgeBlockEntity>> SOULFORGE_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register("soulforge",
+            () -> BlockEntityType.Builder.of(
+                    SoulforgeBlockEntity::new,
+                    SOULFORGE_BLOCK.get()
+            ).build(null)
+    );
+
     public static final ResourceKey<Registry<MilestoneLevel>> MILESTONE_LEVEL_REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MODID, "milestone_levels"));
 
     public AwakenedItems(IEventBus modEventBus, ModContainer modContainer) {
@@ -96,6 +105,7 @@ public class AwakenedItems {
         DATA_COMPONENTS.register(modEventBus);
         ATTACHMENT_TYPES.register(modEventBus);
         ATTRIBUTES.register(modEventBus);
+        BLOCK_ENTITY_TYPES.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 

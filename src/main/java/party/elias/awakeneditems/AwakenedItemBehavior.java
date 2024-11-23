@@ -105,6 +105,12 @@ public class AwakenedItemBehavior {
         });
     }
 
+    public static void milestoneLevelUp(ItemStack itemStack, Level world, MilestoneLevel milestoneLevel) {
+        Utils.withAwakenedItemData(itemStack, awakenedItemData ->
+                itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData.withLevel(awakenedItemData.level() + 1))
+        );
+    }
+
     public static void inventoryTick(ItemStack itemStack, LivingEntity entity) {
         AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 

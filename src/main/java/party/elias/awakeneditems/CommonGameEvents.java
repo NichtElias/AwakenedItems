@@ -141,13 +141,7 @@ public class CommonGameEvents {
 
                     //  flair
                     if (event.getLevel().isClientSide()) {
-                        double x = itemEntity.getX();
-                        double y = itemEntity.getY() + 0.25;
-                        double z = itemEntity.getZ();
-
-                        for (int i = 0; i < 20; i++) {
-                            event.getLevel().addParticle(ParticleTypes.SOUL, x, y, z, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05);
-                        }
+                        Utils.soulPuff(event.getLevel(), itemEntity.getPosition(1).add(0, 0.25, 0));
 
                         event.getLevel().playLocalSound(event.getPos(), SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.75f, 1, false);
                         event.getLevel().playLocalSound(event.getPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1, 1, false);
