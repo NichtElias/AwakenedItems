@@ -28,15 +28,16 @@ public class SoulforgeBlockEntity extends BlockEntity {
         itemHandler = new ItemHandler();
     }
 
-    public ItemStack tryInsertItem(ItemStack itemStack) {
-        ItemStack result = itemStack.copy();
-        result.shrink(1);
+    public int tryInsertItem(ItemStack itemStack) {
+        if (Utils.checkAwakenedItem(itemStack, awakenedItemData -> true) == itemHandler.items.isEmpty()) {
+            itemHandler.items.add(itemStack.copyWithCount(1));
 
-        itemHandler.items.add(itemStack.copyWithCount(1));
+            setChanged();
 
-        setChanged();
+            return itemStack.getCount() - 1;
+        }
 
-        return result.getCount() > 0 ? result : ItemStack.EMPTY;
+        return itemStack.getCount();
     }
 
     public ItemStack tryExtractItem() {

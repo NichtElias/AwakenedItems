@@ -41,11 +41,14 @@ public class SoulforgeBlock extends Block implements EntityBlock {
         Optional<SoulforgeBlockEntity> be = level.getBlockEntity(pos, AwakenedItems.SOULFORGE_BLOCK_ENTITY.get());
 
         if (be.isPresent() && !stack.isEmpty()) {
-            be.get().tryInsertItem(stack);
-            stack.shrink(1);
+            int rest = be.get().tryInsertItem(stack);
 
-            Utils.soulPuff(level, pos.getCenter().add(0, 0.6, 0));
-            level.playLocalSound(pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1, false);
+            if (rest != stack.getCount()) {
+                stack.setCount(rest);
+
+                Utils.soulPuff(level, pos.getCenter().add(0, 0.6, 0));
+                level.playLocalSound(pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1, false);
+            }
 
             return ItemInteractionResult.SUCCESS;
         } else {
