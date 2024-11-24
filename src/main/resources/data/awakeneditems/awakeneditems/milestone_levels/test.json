@@ -2,5 +2,8 @@
   "level": 10,
   "itemType": "melee_weapon",
   "name": "advance",
-  "trigger": "minecraft:story/mine_diamond"
+  "trigger": "minecraft:story/mine_diamond",
+  "reforgingFinisher": {
+    "item": "minecraft:diamond"
+  }
 }

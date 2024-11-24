@@ -43,7 +43,7 @@ public class AwakenedItemBehavior {
             data = data.withXp(data.xp() + amount);
 
             while (data.xp() >= getRequiredXp(data.level())) {
-                MilestoneLevel milestoneLevel = MilestoneLevel.getFor(world, stack, data.level() + 1);
+                MilestoneLevel milestoneLevel = MilestoneLevel.getFor(world, stack, data.level());
                 if (milestoneLevel == null) {
                     data = data.withXp(data.xp() - getRequiredXp(data.level())).withLevel(data.level() + 1);
 
@@ -106,9 +106,16 @@ public class AwakenedItemBehavior {
     }
 
     public static void milestoneLevelUp(ItemStack itemStack, Level world, MilestoneLevel milestoneLevel) {
+        speakToOwner(itemStack, world, milestoneLevel.name() + "-reached", 0, Component.literal(String.valueOf(milestoneLevel.level())));
+
         Utils.withAwakenedItemData(itemStack, awakenedItemData ->
-                itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData.withLevel(awakenedItemData.level() + 1))
+                itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData
+                        .withXp(awakenedItemData.xp() - getRequiredXp(awakenedItemData.level()))
+                        .withLevel(awakenedItemData.level() + 1)
+                        .withFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_XP, false)
+                        .withFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_REQUIREMENTS, false))
         );
+        addXp(itemStack, 0, world);
     }
 
     public static void inventoryTick(ItemStack itemStack, LivingEntity entity) {

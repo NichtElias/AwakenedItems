@@ -9,6 +9,8 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,8 +31,31 @@ public class SoulforgeBlockEntity extends BlockEntity {
     }
 
     public int tryInsertItem(ItemStack itemStack) {
-        if (Utils.checkAwakenedItem(itemStack, awakenedItemData -> true) == itemHandler.items.isEmpty()) {
+        boolean isAwakenedItem = Utils.checkAwakenedItem(itemStack, awakenedItemData -> true);
+        if (isAwakenedItem == itemHandler.items.isEmpty()) {
+            if (isAwakenedItem) {
+                boolean isReady = Boolean.TRUE.equals(Utils.withAwakenedItemDataDo(itemStack, awakenedItemData ->
+                        MilestoneLevel.getFor(getLevel(), itemStack, awakenedItemData.level()) != null
+                        && awakenedItemData.xp() >= AwakenedItemBehavior.getRequiredXp(awakenedItemData.level())
+                        && awakenedItemData.isFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_REQUIREMENTS)
+                ));
+
+                if (!isReady) {
+                    return itemStack.getCount();
+                }
+            }
+
             itemHandler.items.add(itemStack.copyWithCount(1));
+
+            if (!isAwakenedItem) {
+                ItemStack awakened = itemHandler.items.getFirst();
+
+                MilestoneLevel milestoneLevel = MilestoneLevel.getFor(getLevel(), awakened);
+
+                if (milestoneLevel.reforgingFinisher().test(itemStack)) {
+                    reforge();
+                }
+            }
 
             setChanged();
 
@@ -47,6 +72,19 @@ public class SoulforgeBlockEntity extends BlockEntity {
         } else {
             return ItemStack.EMPTY;
         }
+    }
+
+    public void reforge() {
+        ItemStack awakened = itemHandler.items.getFirst();
+
+        itemHandler.items.clear();
+
+        AwakenedItemBehavior.milestoneLevelUp(awakened, getLevel(), MilestoneLevel.getFor(getLevel(), awakened));
+
+        Utils.dropAt(getLevel(), awakened, getBlockPos().getCenter().add(0, 1, 0));
+        Utils.soulPuff(getLevel(), getBlockPos().getCenter().add(0, 1, 0));
+        getLevel().playLocalSound(getBlockPos(), SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.75f, 1, false);
+        getLevel().playLocalSound(getBlockPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1, 1, false);
     }
 
     public List<ItemStack> getItems() {

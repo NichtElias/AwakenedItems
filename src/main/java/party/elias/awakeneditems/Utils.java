@@ -121,11 +121,17 @@ public class Utils {
         return 1;
     }
 
+
     public static void withAwakenedItemData(ItemStack stack, Consumer<AwakenedItemData> consumer) {
+        withAwakenedItemDataDo(stack, awakenedItemData -> {consumer.accept(awakenedItemData); return null;});
+    }
+
+    public static <T> T withAwakenedItemDataDo(ItemStack stack, Function<AwakenedItemData, T> function) {
         AwakenedItemData awakenedItemData = stack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
         if (awakenedItemData != null) {
-            consumer.accept(awakenedItemData);
+            return function.apply(awakenedItemData);
         }
+        return null;
     }
 
     public static boolean checkAwakenedItem(ItemStack itemStack, Predicate<AwakenedItemData> predicate) {

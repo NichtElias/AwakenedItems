@@ -10,18 +10,20 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 
 import java.util.Map;
 
-public record MilestoneLevel (int level, AwakenedItemType itemType, String name, ResourceLocation trigger, boolean hasToBeHeld) {
+public record MilestoneLevel (int level, AwakenedItemType itemType, String name, ResourceLocation trigger, boolean hasToBeHeld, Ingredient reforgingFinisher) {
     public static final Codec<MilestoneLevel> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Codec.INT.fieldOf("level").forGetter(MilestoneLevel::level),
                     StringRepresentable.fromEnum(AwakenedItemType::values).fieldOf("itemType").forGetter(MilestoneLevel::itemType),
                     Codec.STRING.fieldOf("name").forGetter(MilestoneLevel::name),
                     ResourceLocation.CODEC.fieldOf("trigger").forGetter(MilestoneLevel::trigger),
-                    Codec.BOOL.optionalFieldOf("hasToBeHeld", false).forGetter(MilestoneLevel::hasToBeHeld)
+                    Codec.BOOL.optionalFieldOf("hasToBeHeld", false).forGetter(MilestoneLevel::hasToBeHeld),
+                    Ingredient.CODEC.fieldOf("reforgingFinisher").forGetter(MilestoneLevel::reforgingFinisher)
             ).apply(instance, MilestoneLevel::new)
     );
 
@@ -64,10 +66,14 @@ public record MilestoneLevel (int level, AwakenedItemType itemType, String name,
         for (Map.Entry<ResourceKey<MilestoneLevel>, MilestoneLevel> entry: MilestoneLevel.getRegistry(world.registryAccess()).entrySet()) {
             MilestoneLevel milestoneLevel = entry.getValue();
 
-            if (milestoneLevel.itemType().checkItem(itemStack) && milestoneLevel.level() == level) {
+            if (milestoneLevel.itemType().checkItem(itemStack) && milestoneLevel.level() == level + 1) {
                 return milestoneLevel;
             }
         }
         return null;
+    }
+
+    public static MilestoneLevel getFor(Level world, ItemStack itemStack) {
+        return Utils.withAwakenedItemDataDo(itemStack, awakenedItemData -> getFor(world, itemStack, awakenedItemData.level()));
     }
 }
