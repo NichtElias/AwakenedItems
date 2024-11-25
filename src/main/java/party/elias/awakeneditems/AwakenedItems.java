@@ -1,6 +1,8 @@
 package party.elias.awakeneditems;
 
 import com.mojang.logging.LogUtils;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.advancements.critereon.EntitySubPredicate;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -67,6 +69,8 @@ public class AwakenedItems {
 
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
 
+    public static final DeferredRegister<MapCodec<? extends EntitySubPredicate>> ENTITY_SUB_PREDICATES = DeferredRegister.create(Registries.ENTITY_SUB_PREDICATE_TYPE, MODID);
+
 
     public static final DeferredBlock<Block> SOULFORGE_BLOCK = BLOCKS.register("soulforge", SoulforgeBlock::new);
 
@@ -94,6 +98,9 @@ public class AwakenedItems {
                     SOULFORGE_BLOCK.get()
             ).build(null)
     );
+
+    public static final DeferredHolder<MapCodec<? extends EntitySubPredicate>, MapCodec<LivingAttributePredicate>> LIVING_ATTRIBUTE_PREDICATE = ENTITY_SUB_PREDICATES.register("living",
+            () -> LivingAttributePredicate.CODEC);
 
     public static final ResourceKey<Registry<MilestoneLevel>> MILESTONE_LEVEL_REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MODID, "milestone_levels"));
 

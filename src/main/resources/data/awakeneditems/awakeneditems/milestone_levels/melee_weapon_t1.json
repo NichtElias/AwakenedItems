@@ -1,8 +1,8 @@
 {
   "level": 10,
   "itemType": "melee_weapon",
-  "name": "advance",
-  "trigger": "minecraft:story/mine_diamond",
+  "name": "t1",
+  "trigger": "awakeneditems:milestone_levels/melee_kill_powerful_mob",
   "reforgingFinisher": {
     "item": "minecraft:diamond"
   }

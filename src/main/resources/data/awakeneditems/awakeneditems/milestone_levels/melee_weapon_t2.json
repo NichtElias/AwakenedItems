@@ -1,0 +1,9 @@
+{
+  "level": 20,
+  "itemType": "melee_weapon",
+  "name": "t2",
+  "trigger": "awakeneditems:milestone_levels/melee_kill_boss",
+  "reforgingFinisher": {
+    "item": "minecraft:dragon_egg"
+  }
+}

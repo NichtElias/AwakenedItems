@@ -1,0 +1,23 @@
+{
+  "parent": "awakeneditems:milestone_levels/root",
+  "criteria": {
+    "kill_powerful_mob": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type_specific": {
+            "type": "awakeneditems:living",
+            "attributes": {
+              "minecraft:max_health": {
+                "min": 40
+              }
+            }
+          }
+        },
+        "killing_blow": {
+          "is_direct": true
+        }
+      }
+    }
+  }
+}
