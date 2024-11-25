@@ -334,9 +334,11 @@ public class CommonGameEvents {
     }
 
     @SubscribeEvent
-    public static void onAdvancementEarn(AdvancementEvent.AdvancementEarnEvent event) {
+    public static void onAdvancementProgress(AdvancementEvent.AdvancementProgressEvent event) {
 
-        MilestoneLevelManager.triggerAll(event.getAdvancement(), event.getEntity());
+        if (event.getAdvancementProgress().isDone()) {
+            MilestoneLevelManager.triggerAll(event.getAdvancement(), event.getEntity());
+        }
     }
 
     @SubscribeEvent
