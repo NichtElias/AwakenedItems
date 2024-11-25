@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public enum AwakenedItemType implements StringRepresentable {
+    ANY(0, Set.of(), item -> true),
     BREAKING_TOOL(5, Set.of(), item -> {
             Tool tool = item.get(DataComponents.TOOL);
             return ((tool != null) && !tool.rules().isEmpty())

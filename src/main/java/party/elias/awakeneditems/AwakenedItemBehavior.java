@@ -43,7 +43,7 @@ public class AwakenedItemBehavior {
             data = data.withXp(data.xp() + amount);
 
             while (data.xp() >= getRequiredXp(data.level())) {
-                MilestoneLevel milestoneLevel = MilestoneLevel.getFor(world, stack, data.level());
+                MilestoneLevel milestoneLevel = MilestoneLevelManager.getFor(stack, data.level());
                 if (milestoneLevel == null) {
                     data = data.withXp(data.xp() - getRequiredXp(data.level())).withLevel(data.level() + 1);
 

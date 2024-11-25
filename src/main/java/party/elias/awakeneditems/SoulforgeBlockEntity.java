@@ -1,11 +1,9 @@
 package party.elias.awakeneditems;
 
-import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -35,7 +33,7 @@ public class SoulforgeBlockEntity extends BlockEntity {
         if (isAwakenedItem == itemHandler.items.isEmpty()) {
             if (isAwakenedItem) {
                 boolean isReady = Boolean.TRUE.equals(Utils.withAwakenedItemDataDo(itemStack, awakenedItemData ->
-                        MilestoneLevel.getFor(getLevel(), itemStack, awakenedItemData.level()) != null
+                        MilestoneLevelManager.getFor(itemStack, awakenedItemData.level()) != null
                         && awakenedItemData.xp() >= AwakenedItemBehavior.getRequiredXp(awakenedItemData.level())
                         && awakenedItemData.isFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_REQUIREMENTS)
                 ));
@@ -50,7 +48,7 @@ public class SoulforgeBlockEntity extends BlockEntity {
             if (!isAwakenedItem) {
                 ItemStack awakened = itemHandler.items.getFirst();
 
-                MilestoneLevel milestoneLevel = MilestoneLevel.getFor(getLevel(), awakened);
+                MilestoneLevel milestoneLevel = MilestoneLevelManager.getFor(awakened);
 
                 if (milestoneLevel.reforgingFinisher().test(itemStack)) {
                     reforge();
@@ -79,7 +77,7 @@ public class SoulforgeBlockEntity extends BlockEntity {
 
         itemHandler.items.clear();
 
-        AwakenedItemBehavior.milestoneLevelUp(awakened, getLevel(), MilestoneLevel.getFor(getLevel(), awakened));
+        AwakenedItemBehavior.milestoneLevelUp(awakened, getLevel(), MilestoneLevelManager.getFor(awakened));
 
         Utils.dropAt(getLevel(), awakened, getBlockPos().getCenter().add(0, 1, 0));
         Utils.soulPuff(getLevel(), getBlockPos().getCenter().add(0, 1, 0));
