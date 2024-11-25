@@ -1,5 +1,7 @@
 package party.elias.awakeneditems;
 
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
@@ -152,5 +154,13 @@ public class Utils {
         ItemEntity entity = new ItemEntity(level, pos.x, pos.y, pos.z, itemStack);
         entity.setDefaultPickUpDelay();
         level.addFreshEntity(entity);
+    }
+
+    public static void revokeAdvancement(ServerPlayer player, AdvancementHolder advancementHolder) {
+        AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancementHolder);
+
+        for (String s: progress.getCompletedCriteria()) {
+            player.getAdvancements().revoke(advancementHolder, s);
+        }
     }
 }

@@ -1,9 +1,11 @@
 package party.elias.awakeneditems;
 
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -63,6 +65,10 @@ public class MilestoneLevelManager extends SimplePreparableReloadListener<Void> 
                                     }
                                 });
                             });
+                        }
+
+                        if (player instanceof ServerPlayer serverPlayer) {
+                            Utils.revokeAdvancement(serverPlayer, advancement);
                         }
                     }
                 }
