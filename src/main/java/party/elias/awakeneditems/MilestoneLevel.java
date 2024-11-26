@@ -10,11 +10,11 @@ public record MilestoneLevel (int level, AwakenedItemType itemType, String name,
     public static final Codec<MilestoneLevel> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Codec.INT.fieldOf("level").forGetter(MilestoneLevel::level),
-                    StringRepresentable.fromEnum(AwakenedItemType::values).fieldOf("itemType").forGetter(MilestoneLevel::itemType),
+                    StringRepresentable.fromEnum(AwakenedItemType::values).fieldOf("item_type").forGetter(MilestoneLevel::itemType),
                     Codec.STRING.fieldOf("name").forGetter(MilestoneLevel::name),
                     ResourceLocation.CODEC.fieldOf("trigger").forGetter(MilestoneLevel::trigger),
-                    Codec.BOOL.optionalFieldOf("hasToBeHeld", false).forGetter(MilestoneLevel::hasToBeHeld),
-                    Ingredient.CODEC.fieldOf("reforgingFinisher").forGetter(MilestoneLevel::reforgingFinisher),
+                    Codec.BOOL.optionalFieldOf("must_be_held", false).forGetter(MilestoneLevel::hasToBeHeld),
+                    Ingredient.CODEC.fieldOf("reforging_finisher").forGetter(MilestoneLevel::reforgingFinisher),
                     Codec.INT.optionalFieldOf("priority", 0).forGetter(MilestoneLevel::priority)
             ).apply(instance, MilestoneLevel::new)
     );
