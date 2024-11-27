@@ -22,6 +22,9 @@
   "awakeneditems.configuration.level.xpPerCurioHectotick": "XP per 100 ticks for curios",
 
   "chat.awakeneditems.aimsg.t1-xp.any.any": "Pick up a diamond.",
+  "chat.awakeneditems.aimsg.t1-xp.melee_weapon.any": "Kill biggy",
+  "chat.awakeneditems.aimsg.t1-xp.any.arrogant": "Pick up a diamond. a",
+  "chat.awakeneditems.aimsg.t1-xp.melee_weapon.arrogant": "Kill biggy a",
   "chat.awakeneditems.aimsg.t1-requirements.any.any": "Now go make me gud.",
   "chat.awakeneditems.aimsg.t1-reached.any.any": "Nice %s",
   "chat.awakeneditems.aimsg.levelup.any.any": "I'm level %s now!",
