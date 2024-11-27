@@ -65,7 +65,7 @@ public enum AwakenedItemType implements StringRepresentable {
             return false;
 
         for (AwakenedItemType type: values()) {
-            if (type.checkItem(item) && type != this) {
+            if (type.specificity == specificity && type.checkItem(item) && type != this) {
                 return false;
             }
         }
