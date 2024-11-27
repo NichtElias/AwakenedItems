@@ -1,0 +1,16 @@
+{
+  "parent": "awakeneditems:milestone_levels/root",
+  "criteria": {
+    "example": {
+      "trigger": "minecraft:entity_hurt_player",
+      "conditions": {
+        "damage": {
+          "blocked": true,
+          "dealt": {
+            "min": 40
+          }
+        }
+      }
+    }
+  }
+}

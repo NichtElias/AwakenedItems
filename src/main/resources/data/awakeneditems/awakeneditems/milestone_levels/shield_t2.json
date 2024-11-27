@@ -1,0 +1,9 @@
+{
+  "level": 20,
+  "item_type": "shield",
+  "name": "t2",
+  "trigger": "awakeneditems:milestone_levels/block_40hp",
+  "reforging_finisher": {
+    "item": "minecraft:dragon_egg"
+  }
+}
