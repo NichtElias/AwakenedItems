@@ -9,12 +9,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.Optional;
 
-public record MilestoneLevel (int level, AwakenedItemType itemType, String name, ResourceLocation trigger, Optional<EquipmentSlotGroup> inSlot, Ingredient reforgingFinisher, int priority) {
+public record MilestoneLevel (int level, AwakenedItemType itemType, ResourceLocation trigger, Optional<EquipmentSlotGroup> inSlot, Ingredient reforgingFinisher, int priority) {
     public static final Codec<MilestoneLevel> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Codec.INT.fieldOf("level").forGetter(MilestoneLevel::level),
                     StringRepresentable.fromEnum(AwakenedItemType::values).fieldOf("item_type").forGetter(MilestoneLevel::itemType),
-                    Codec.STRING.fieldOf("name").forGetter(MilestoneLevel::name),
                     ResourceLocation.CODEC.fieldOf("trigger").forGetter(MilestoneLevel::trigger),
                     EquipmentSlotGroup.CODEC.optionalFieldOf("in_slot").forGetter(MilestoneLevel::inSlot),
                     Ingredient.CODEC.fieldOf("reforging_finisher").forGetter(MilestoneLevel::reforgingFinisher),
@@ -22,4 +21,7 @@ public record MilestoneLevel (int level, AwakenedItemType itemType, String name,
             ).apply(instance, MilestoneLevel::new)
     );
 
+    public String name() {
+        return MilestoneLevelManager.getRegistry().getKey(this).getPath().replace("/", ".");
+    }
 }

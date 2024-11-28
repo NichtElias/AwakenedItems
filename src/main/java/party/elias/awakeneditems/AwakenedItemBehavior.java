@@ -51,7 +51,7 @@ public class AwakenedItemBehavior {
                     AwakenedItemBehavior.speakToOwner(stack, world, "levelup", 0, Component.literal(String.valueOf(data.level())));
                 } else {
                     if (!data.isFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_XP)) {
-                        AwakenedItemBehavior.speakToOwner(stack, world, milestoneLevel.name() + "-xp", 0);
+                        AwakenedItemBehavior.speakToOwner(stack, world, "ml_xp." + milestoneLevel.name(), 0);
                         data = data.withFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_XP, true);
                     }
                     break;
@@ -98,7 +98,7 @@ public class AwakenedItemBehavior {
     }
 
     public static void fulfillMilestoneRequirements(ItemStack itemStack, Level world, MilestoneLevel milestoneLevel) {
-        speakToOwner(itemStack, world, milestoneLevel.name() + "-requirements", 0);
+        speakToOwner(itemStack, world, "ml_requirements." + milestoneLevel.name(), 0);
 
         Utils.withAwakenedItemData(itemStack, awakenedItemData -> {
             itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData.withFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_REQUIREMENTS, true));
@@ -106,7 +106,7 @@ public class AwakenedItemBehavior {
     }
 
     public static void milestoneLevelUp(ItemStack itemStack, Level world, MilestoneLevel milestoneLevel) {
-        speakToOwner(itemStack, world, milestoneLevel.name() + "-reached", 0, Component.literal(String.valueOf(milestoneLevel.level())));
+        speakToOwner(itemStack, world, "ml_reached." + milestoneLevel.name(), 0, Component.literal(String.valueOf(milestoneLevel.level())));
 
         Utils.withAwakenedItemData(itemStack, awakenedItemData ->
                 itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData
