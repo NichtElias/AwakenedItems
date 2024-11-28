@@ -1,7 +1,6 @@
 {
   "level": 20,
   "item_type": "armor",
-  "name": "t2",
   "trigger": "awakeneditems:milestone_levels/tank_40hp",
   "in_slot": "armor",
   "reforging_finisher": {

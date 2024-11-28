@@ -1,7 +1,6 @@
 {
   "level": 10,
   "item_type": "melee_weapon",
-  "name": "t1",
   "trigger": "awakeneditems:milestone_levels/melee_kill_powerful_mob",
   "in_slot": "mainhand",
   "reforging_finisher": {

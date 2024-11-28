@@ -1,7 +1,6 @@
 {
   "level": 10,
   "item_type": "any",
-  "name": "t1",
   "trigger": "awakeneditems:milestone_levels/visit_nether",
   "reforging_finisher": {
     "item": "minecraft:diamond"

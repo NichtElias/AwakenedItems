@@ -1,7 +1,6 @@
 {
   "level": 10,
   "item_type": "fishing_rod",
-  "name": "t1",
   "trigger": "awakeneditems:milestone_levels/fish_enchanted_book",
   "in_slot": "mainhand",
   "reforging_finisher": {
