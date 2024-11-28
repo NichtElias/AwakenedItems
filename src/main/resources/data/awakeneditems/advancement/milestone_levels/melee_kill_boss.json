@@ -1,7 +1,7 @@
 {
   "parent": "awakeneditems:milestone_levels/root",
   "criteria": {
-    "kill_ender_dragon": {
+    "melee_kill_boss": {
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
         "entity": {

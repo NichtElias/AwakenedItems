@@ -1,7 +1,7 @@
 {
   "parent": "awakeneditems:milestone_levels/root",
   "criteria": {
-    "example": {
+    "fish_mending_book": {
       "trigger": "minecraft:fishing_rod_hooked",
       "conditions": {
         "item": {
