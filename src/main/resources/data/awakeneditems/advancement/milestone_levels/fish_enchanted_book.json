@@ -1,0 +1,13 @@
+{
+  "parent": "awakeneditems:milestone_levels/root",
+  "criteria": {
+    "example": {
+      "trigger": "minecraft:fishing_rod_hooked",
+      "conditions": {
+        "item": {
+          "items": "minecraft:enchanted_book"
+        }
+      }
+    }
+  }
+}

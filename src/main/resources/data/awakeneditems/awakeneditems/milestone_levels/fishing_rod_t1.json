@@ -1,0 +1,10 @@
+{
+  "level": 10,
+  "item_type": "fishing_rod",
+  "name": "t1",
+  "trigger": "awakeneditems:milestone_levels/fish_enchanted_book",
+  "must_be_held": true,
+  "reforging_finisher": {
+    "item": "minecraft:diamond"
+  }
+}
