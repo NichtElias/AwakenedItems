@@ -3,7 +3,7 @@
   "item_type": "fishing_rod",
   "name": "t2",
   "trigger": "awakeneditems:milestone_levels/fish_mending_book",
-  "must_be_held": true,
+  "in_slot": "mainhand",
   "reforging_finisher": {
     "item": "minecraft:dragon_egg"
   }

@@ -1,7 +1,6 @@
 package party.elias.awakeneditems;
 
 import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
@@ -9,15 +8,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 public class MilestoneLevelManager extends SimplePreparableReloadListener<Void> {
 
@@ -46,17 +43,20 @@ public class MilestoneLevelManager extends SimplePreparableReloadListener<Void> 
                 milestoneLevel -> {
                     if (milestoneLevel.trigger().equals(advancement.id())) {
 
-                        if (milestoneLevel.hasToBeHeld()) {
+                        if (milestoneLevel.inSlot().isPresent()) {
+                            for (EquipmentSlot slot: EquipmentSlot.values()) {
+                                if (milestoneLevel.inSlot().get().test(slot)) {
+                                    ItemStack itemStack = player.getItemBySlot(slot);
 
-                            ItemStack itemStack = player.getMainHandItem();
-                            Utils.withAwakenedItemData(itemStack, awakenedItemData -> {
-                                if (milestoneLevel.itemType().checkItem(itemStack) && awakenedItemData.level() + 1 == milestoneLevel.level()
-                                        && awakenedItemData.xp() >= AwakenedItemBehavior.getRequiredXp(awakenedItemData.level())) {
-                                    AwakenedItemBehavior.fulfillMilestoneRequirements(itemStack, player.level(), milestoneLevel);
+                                    Utils.withAwakenedItemData(itemStack, awakenedItemData -> {
+                                        if (milestoneLevel.itemType().checkItem(itemStack) && awakenedItemData.level() + 1 == milestoneLevel.level()
+                                                && awakenedItemData.xp() >= AwakenedItemBehavior.getRequiredXp(awakenedItemData.level())) {
+                                            AwakenedItemBehavior.fulfillMilestoneRequirements(itemStack, player.level(), milestoneLevel);
+                                        }
+                                    });
                                 }
-                            });
+                            }
                         } else {
-
                             Utils.forAllAwakenedItemsOnEntity(player, (itemStack, livingEntity) -> {
                                 Utils.withAwakenedItemData(itemStack, awakenedItemData -> {
                                     if (milestoneLevel.itemType().checkItem(itemStack) && awakenedItemData.level() + 1 == milestoneLevel.level()
