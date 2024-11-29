@@ -6,7 +6,8 @@
   "attribute.awakeneditems.ai_power": "Awakened Item Power",
 
   "tag.item.awakeneditems.curios": "Curios",
-  "emi.info.awakeneditems.awakening": "Any item can be awakened by dropping it on an anvil and then using soulstuff on the anvil.",
+
+  "info.awakeneditems.awakening": "Any item can be awakened by dropping it on an anvil and then using soulstuff on the anvil.",
 
   "curios.modifiers.heart_amulet": "When equipped:",
 
