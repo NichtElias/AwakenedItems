@@ -13,7 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class MilestoneLevelManager extends SimplePreparableReloadListener<Void> {
@@ -34,7 +33,7 @@ public class MilestoneLevelManager extends SimplePreparableReloadListener<Void> 
     }
 
     public static Registry<MilestoneLevel> getRegistry() {
-        return INSTANCE.registryAccess.registryOrThrow(AwakenedItems.MILESTONE_LEVEL_REGISTRY_KEY);
+        return INSTANCE.registryAccess.lookupOrThrow(AwakenedItems.MILESTONE_LEVEL_REGISTRY_KEY);
     }
 
     public static void triggerAll(AdvancementHolder advancement, Player player) {

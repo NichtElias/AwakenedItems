@@ -3,7 +3,5 @@
   "item_type": "armor",
   "trigger": "awakeneditems:milestone_levels/tank_20hp",
   "in_slot": "armor",
-  "reforging_finisher": {
-    "item": "minecraft:diamond"
-  }
+  "reforging_finisher": "minecraft:diamond"
 }

@@ -3,7 +3,5 @@
   "item_type": "fishing_rod",
   "trigger": "awakeneditems:milestone_levels/fish_mending_book",
   "in_slot": "mainhand",
-  "reforging_finisher": {
-    "item": "minecraft:dragon_egg"
-  }
+  "reforging_finisher": "minecraft:dragon_egg"
 }

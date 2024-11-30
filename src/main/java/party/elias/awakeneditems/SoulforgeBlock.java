@@ -1,24 +1,16 @@
 package party.elias.awakeneditems;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -27,8 +19,8 @@ import java.util.Optional;
 
 public class SoulforgeBlock extends Block implements EntityBlock {
 
-    public SoulforgeBlock() {
-        super(BlockBehaviour.Properties.of().destroyTime(10).explosionResistance(10).sound(SoundType.ANVIL).noOcclusion());
+    public SoulforgeBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
@@ -37,7 +29,7 @@ public class SoulforgeBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         Optional<SoulforgeBlockEntity> be = level.getBlockEntity(pos, AwakenedItems.SOULFORGE_BLOCK_ENTITY.get());
 
         if (be.isPresent() && !stack.isEmpty()) {
@@ -50,9 +42,9 @@ public class SoulforgeBlock extends Block implements EntityBlock {
                 level.playLocalSound(pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1, false);
             }
 
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS.heldItemTransformedTo(stack);
         } else {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.PASS;
         }
     }
 
@@ -69,7 +61,7 @@ public class SoulforgeBlock extends Block implements EntityBlock {
 
                 level.playLocalSound(pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1, 1, false);
 
-                return InteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS.withoutItem();
             }
             return InteractionResult.PASS;
         } else {

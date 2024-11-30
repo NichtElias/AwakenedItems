@@ -62,26 +62,6 @@ public class Utils {
         if (ModList.get().isLoaded("curios")) {
             CuriosCompat.forAllAwakenedItemsOnEntity(entity, consumer);
         }
-
-        /*
-        if (entity instanceof Player player) {
-            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-                ItemStack stack = player.getInventory().getItem(i);
-
-                if (stack.has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
-                    consumer.accept(stack, player);
-                }
-            }
-        } else {
-            for (EquipmentSlot slot: EquipmentSlot.values()) {
-                ItemStack item = entity.getItemBySlot(slot);
-
-                if (item.has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
-                    consumer.accept(item, entity);
-                }
-            }
-        }
-         */
     }
 
     public static ServerPlayer getPlayerByUUIDFromServer(MinecraftServer server, UUID uuid) {

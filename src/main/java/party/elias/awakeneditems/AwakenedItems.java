@@ -72,7 +72,9 @@ public class AwakenedItems {
     public static final DeferredRegister<MapCodec<? extends EntitySubPredicate>> ENTITY_SUB_PREDICATES = DeferredRegister.create(Registries.ENTITY_SUB_PREDICATE_TYPE, MODID);
 
 
-    public static final DeferredBlock<Block> SOULFORGE_BLOCK = BLOCKS.register("soulforge", SoulforgeBlock::new);
+    public static final DeferredBlock<Block> SOULFORGE_BLOCK = BLOCKS.registerBlock("soulforge", SoulforgeBlock::new,
+            BlockBehaviour.Properties.of().destroyTime(10).explosionResistance(10).sound(SoundType.ANVIL).noOcclusion()
+    );
 
     public static final DeferredItem<Item> SOULSTUFF_ITEM = ITEMS.registerSimpleItem("soulstuff", new Item.Properties());
 
@@ -93,10 +95,10 @@ public class AwakenedItems {
             () -> new RangedAttribute("attribute." + MODID + ".ai_power", 1, -Double.MAX_VALUE, Double.MAX_VALUE).setSyncable(true));
 
     public static final Supplier<BlockEntityType<SoulforgeBlockEntity>> SOULFORGE_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register("soulforge",
-            () -> BlockEntityType.Builder.of(
+            () -> new BlockEntityType<>(
                     SoulforgeBlockEntity::new,
                     SOULFORGE_BLOCK.get()
-            ).build(null)
+            )
     );
 
     public static final DeferredHolder<MapCodec<? extends EntitySubPredicate>, MapCodec<LivingAttributePredicate>> LIVING_ATTRIBUTE_PREDICATE = ENTITY_SUB_PREDICATES.register("living",
