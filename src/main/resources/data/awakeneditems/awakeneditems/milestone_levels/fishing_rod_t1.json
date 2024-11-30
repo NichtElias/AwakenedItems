@@ -3,5 +3,5 @@
   "item_type": "fishing_rod",
   "trigger": "awakeneditems:milestone_levels/fish_enchanted_book",
   "in_slot": "mainhand",
-  "reforging_finisher": "minecraft:diamond"
+  "reforging_finisher": "minecraft:pufferfish"
 }

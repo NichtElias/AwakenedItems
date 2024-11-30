@@ -3,5 +3,5 @@
   "item_type": "armor",
   "trigger": "awakeneditems:milestone_levels/tank_20hp",
   "in_slot": "armor",
-  "reforging_finisher": "minecraft:diamond"
+  "reforging_finisher": "minecraft:armadillo_scute"
 }

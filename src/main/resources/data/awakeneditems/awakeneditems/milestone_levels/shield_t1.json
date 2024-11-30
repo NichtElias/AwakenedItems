@@ -3,5 +3,5 @@
   "item_type": "shield",
   "trigger": "awakeneditems:milestone_levels/block_20hp",
   "in_slot": "hand",
-  "reforging_finisher": "minecraft:diamond"
+  "reforging_finisher": "minecraft:armadillo_scute"
 }
