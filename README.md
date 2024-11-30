@@ -37,6 +37,12 @@ Additionally:
 - Items that store energy get slowly recharged.
 - Curios give you "awakened item power" when equipped, making your other awakened items stronger.
 
+## Milestone Levels
+
+At some points an Awakened Item can't advance any further and will need to be reforged. Before it can be reforged at a
+soulforge, you need to achieve something specific, dependent on the item type. Just follow the instructions of your
+item, it should tell you what to do.
+
 ## Roadmap
 
 In arbitrary order.
