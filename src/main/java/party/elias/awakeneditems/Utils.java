@@ -1,16 +1,21 @@
 package party.elias.awakeneditems;
 
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -20,6 +25,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Utils {
     public static double getSummedAttributeModifiers(ItemAttributeModifiers modifiers, Holder<Attribute> attribute, AttributeModifier.Operation operation) {
@@ -113,5 +121,46 @@ public class Utils {
         if (entity instanceof LivingEntity livingEntity)
             return livingEntity.getAttributeValue(AwakenedItems.AI_POWER_ATTRIBUTE);
         return 1;
+    }
+
+
+    public static void withAwakenedItemData(ItemStack stack, Consumer<AwakenedItemData> consumer) {
+        withAwakenedItemDataDo(stack, awakenedItemData -> {consumer.accept(awakenedItemData); return null;});
+    }
+
+    public static <T> T withAwakenedItemDataDo(ItemStack stack, Function<AwakenedItemData, T> function) {
+        AwakenedItemData awakenedItemData = stack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+        if (awakenedItemData != null) {
+            return function.apply(awakenedItemData);
+        }
+        return null;
+    }
+
+    public static boolean checkAwakenedItem(ItemStack itemStack, Predicate<AwakenedItemData> predicate) {
+        AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+        if (awakenedItemData != null) {
+            return predicate.test(awakenedItemData);
+        }
+        return false;
+    }
+
+    public static void soulPuff(Level level, Vec3 pos) {
+        for (int i = 0; i < 20; i++) {
+            level.addParticle(ParticleTypes.SOUL, pos.x, pos.y, pos.z, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05);
+        }
+    }
+
+    public static void dropAt(Level level, ItemStack itemStack, Vec3 pos) {
+        ItemEntity entity = new ItemEntity(level, pos.x, pos.y, pos.z, itemStack);
+        entity.setDefaultPickUpDelay();
+        level.addFreshEntity(entity);
+    }
+
+    public static void revokeAdvancement(ServerPlayer player, AdvancementHolder advancementHolder) {
+        AdvancementProgress progress = player.getAdvancements().getOrStartProgress(advancementHolder);
+
+        for (String s: progress.getCompletedCriteria()) {
+            player.getAdvancements().revoke(advancementHolder, s);
+        }
     }
 }

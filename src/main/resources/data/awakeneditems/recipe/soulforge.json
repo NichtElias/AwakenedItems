@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ISI",
+    " I ",
+    "III"
+  ],
+  "key": {
+    "S": {
+      "item": "awakeneditems:soulstuff"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "id": "awakeneditems:soulforge"
+  }
+}

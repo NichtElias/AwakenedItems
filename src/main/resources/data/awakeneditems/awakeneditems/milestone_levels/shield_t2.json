@@ -1,0 +1,9 @@
+{
+  "level": 20,
+  "item_type": "shield",
+  "trigger": "awakeneditems:milestone_levels/block_40hp",
+  "in_slot": "hand",
+  "reforging_finisher": {
+    "item": "minecraft:dragon_egg"
+  }
+}

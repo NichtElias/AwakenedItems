@@ -1,0 +1,9 @@
+{
+  "level": 20,
+  "item_type": "melee_weapon",
+  "trigger": "awakeneditems:milestone_levels/melee_kill_boss",
+  "in_slot": "mainhand",
+  "reforging_finisher": {
+    "item": "minecraft:dragon_egg"
+  }
+}

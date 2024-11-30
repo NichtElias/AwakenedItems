@@ -1,0 +1,11 @@
+{
+  "parent": "awakeneditems:milestone_levels/root",
+  "criteria": {
+    "visit_nether": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "minecraft:the_nether"
+      }
+    }
+  }
+}
