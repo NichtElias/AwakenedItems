@@ -4,6 +4,6 @@
   "trigger": "awakeneditems:milestone_levels/tank_40hp",
   "in_slot": "armor",
   "reforging_finisher": {
-    "item": "minecraft:dragon_egg"
+    "item": "minecraft:shulker_shell"
   }
 }

@@ -4,6 +4,6 @@
   "trigger": "awakeneditems:milestone_levels/block_20hp",
   "in_slot": "hand",
   "reforging_finisher": {
-    "item": "minecraft:diamond"
+    "item": "minecraft:armadillo_scute"
   }
 }

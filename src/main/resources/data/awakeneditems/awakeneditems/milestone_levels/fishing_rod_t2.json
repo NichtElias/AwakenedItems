@@ -4,6 +4,6 @@
   "trigger": "awakeneditems:milestone_levels/fish_mending_book",
   "in_slot": "mainhand",
   "reforging_finisher": {
-    "item": "minecraft:dragon_egg"
+    "item": "minecraft:heart_of_the_sea"
   }
 }
