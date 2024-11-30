@@ -6,7 +6,7 @@
 ## Features
 
 - Awaken any item. Absolutely any item.
-- Awakened items will get better the more you use them (similar to Tinkers Tool Leveling). This currently only has an effect for melee weapons, block breaking tools and armor.
+- Awakened items will get better the more you use them (similar to Tinkers Tool Leveling). This currently only has an effect for the items listed under [Supported Items](#supported-items).
 - Each awakened item talks to you and has a personality.
 
 ## Miscellaneous Abilities of Awakened Items
