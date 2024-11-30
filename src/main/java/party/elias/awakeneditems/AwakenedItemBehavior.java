@@ -139,7 +139,7 @@ public class AwakenedItemBehavior {
         }
 
         if (entity.level() instanceof ServerLevel serverLevel) {
-            maybeSpeakToOwner(0.0005, itemStack, entity.level(), "random", 5000);
+            maybeSpeakToOwner(0.0005, itemStack, entity.level(), "random", 10000);
 
             if (!entity.getUUID().equals(awakenedItemData.owner()) && Math.random() < 0.05) {
                 entity.hurt(new DamageSource(entity.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)),
