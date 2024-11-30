@@ -1,0 +1,9 @@
+{
+  "level": 10,
+  "item_type": "shield",
+  "trigger": "awakeneditems:milestone_levels/block_20hp",
+  "in_slot": "hand",
+  "reforging_finisher": {
+    "item": "minecraft:diamond"
+  }
+}

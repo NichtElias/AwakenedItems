@@ -2,7 +2,6 @@ package party.elias.awakeneditems;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +31,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.item.ItemExpireEvent;
@@ -54,6 +54,11 @@ public class CommonGameEvents {
     @SubscribeEvent
     public static void onServerStarting(ServerStartingEvent event) {
         SERVER = event.getServer();
+    }
+
+    @SubscribeEvent
+    public static void onAddReloadListener(AddReloadListenerEvent event) {
+        event.addListener(MilestoneLevelManager.init(event.getRegistryAccess()));
     }
 
     @SubscribeEvent
@@ -140,13 +145,7 @@ public class CommonGameEvents {
 
                     //  flair
                     if (event.getLevel().isClientSide()) {
-                        double x = itemEntity.getX();
-                        double y = itemEntity.getY() + 0.25;
-                        double z = itemEntity.getZ();
-
-                        for (int i = 0; i < 20; i++) {
-                            event.getLevel().addParticle(ParticleTypes.SOUL, x, y, z, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05);
-                        }
+                        Utils.soulPuff(event.getLevel(), itemEntity.getPosition(1).add(0, 0.25, 0));
 
                         event.getLevel().playLocalSound(event.getPos(), SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.75f, 1, false);
                         event.getLevel().playLocalSound(event.getPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1, 1, false);
@@ -331,6 +330,14 @@ public class CommonGameEvents {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAdvancementProgress(AdvancementEvent.AdvancementProgressEvent event) {
+
+        if (event.getAdvancementProgress().isDone()) {
+            MilestoneLevelManager.triggerAll(event.getAdvancement(), event.getEntity());
         }
     }
 

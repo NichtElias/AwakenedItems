@@ -14,10 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 public record ItemChatMessage(ItemStack item, String trigger, List<Component> formatArgs) implements CustomPacketPayload {
@@ -86,13 +84,25 @@ public record ItemChatMessage(ItemStack item, String trigger, List<Component> fo
 
             List<PersonalityTrait> traits = aiData.personality();
 
-            for (List<Integer> combination:
-                    ICM_I18N_PRIORITY_MATRIX.stream().filter(l -> l.stream().max(Integer::compare).orElse(Integer.MAX_VALUE) < traits.size()).toList()) {
+            List<AwakenedItemType> types = AwakenedItemType.getItemTypes(icm.item()).stream().sorted(Comparator.comparingInt(AwakenedItemType::getSpecificity).reversed()).toList();
 
-                String traitString = String.join("-",
-                        combination.stream().map(traits::get).map(PersonalityTrait::lower).toList());
+            for (AwakenedItemType type: types) {
+                for (List<Integer> combination :
+                        ICM_I18N_PRIORITY_MATRIX.stream().filter(l -> l.stream().max(Integer::compare).orElse(Integer.MAX_VALUE) < traits.size()).toList()) {
 
-                String k = AIMSG_KEY.formatted(icm.trigger(), "any", traitString);
+                    String traitString = String.join("-",
+                            combination.stream().map(traits::get).map(PersonalityTrait::lower).toList());
+
+                    String k = AIMSG_KEY.formatted(icm.trigger(), type.getSerializedName(), traitString);
+
+                    if (I18n.exists(k)) {
+                        key = k;
+                        break;
+                    }
+                }
+                if (key != null) break;
+
+                String k = AIMSG_KEY.formatted(icm.trigger(), type.getSerializedName(), "any");
 
                 if (I18n.exists(k)) {
                     key = k;

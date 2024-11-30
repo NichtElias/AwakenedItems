@@ -1,0 +1,9 @@
+{
+  "level": 10,
+  "item_type": "melee_weapon",
+  "trigger": "awakeneditems:milestone_levels/melee_kill_powerful_mob",
+  "in_slot": "mainhand",
+  "reforging_finisher": {
+    "item": "minecraft:diamond"
+  }
+}

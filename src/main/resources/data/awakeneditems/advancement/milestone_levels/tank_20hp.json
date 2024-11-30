@@ -1,0 +1,16 @@
+{
+  "parent": "awakeneditems:milestone_levels/root",
+  "criteria": {
+    "tank_20hp": {
+      "trigger": "minecraft:entity_hurt_player",
+      "conditions": {
+        "damage": {
+          "blocked": false,
+          "dealt": {
+            "min": 20
+          }
+        }
+      }
+    }
+  }
+}

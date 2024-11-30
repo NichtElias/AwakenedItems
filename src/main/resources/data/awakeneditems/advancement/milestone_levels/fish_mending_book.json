@@ -1,0 +1,18 @@
+{
+  "parent": "awakeneditems:milestone_levels/root",
+  "criteria": {
+    "fish_mending_book": {
+      "trigger": "minecraft:fishing_rod_hooked",
+      "conditions": {
+        "item": {
+          "items": "minecraft:enchanted_book",
+          "components": {
+            "minecraft:stored_enchantments": {
+              "levels": { "minecraft:mending": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

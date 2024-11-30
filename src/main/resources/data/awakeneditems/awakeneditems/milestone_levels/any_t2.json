@@ -1,0 +1,8 @@
+{
+  "level": 20,
+  "item_type": "any",
+  "trigger": "awakeneditems:milestone_levels/visit_end",
+  "reforging_finisher": {
+    "item": "minecraft:dragon_egg"
+  }
+}

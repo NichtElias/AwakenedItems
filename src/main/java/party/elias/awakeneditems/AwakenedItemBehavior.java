@@ -43,10 +43,19 @@ public class AwakenedItemBehavior {
             data = data.withXp(data.xp() + amount);
 
             while (data.xp() >= getRequiredXp(data.level())) {
-                data = data.withXp(data.xp() - getRequiredXp(data.level())).withLevel(data.level() + 1);
+                MilestoneLevel milestoneLevel = MilestoneLevelManager.getFor(stack, data.level());
+                if (milestoneLevel == null) {
+                    data = data.withXp(data.xp() - getRequiredXp(data.level())).withLevel(data.level() + 1);
 
-                stack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, data);
-                AwakenedItemBehavior.speakToOwner(stack, world, "levelup", 0, Component.literal(String.valueOf(data.level())));
+                    stack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, data);
+                    AwakenedItemBehavior.speakToOwner(stack, world, "levelup", 0, Component.literal(String.valueOf(data.level())));
+                } else {
+                    if (!data.isFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_XP)) {
+                        AwakenedItemBehavior.speakToOwner(stack, world, "ml_xp." + milestoneLevel.name(), 0);
+                        data = data.withFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_XP, true);
+                    }
+                    break;
+                }
             }
 
             stack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, data);
@@ -86,6 +95,27 @@ public class AwakenedItemBehavior {
         if (itemStack.getDamageValue() == itemStack.getMaxDamage() - 2) {
             speakToOwner(itemStack, level, "willdie", 0);
         }
+    }
+
+    public static void fulfillMilestoneRequirements(ItemStack itemStack, Level world, MilestoneLevel milestoneLevel) {
+        speakToOwner(itemStack, world, "ml_requirements." + milestoneLevel.name(), 0);
+
+        Utils.withAwakenedItemData(itemStack, awakenedItemData -> {
+            itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData.withFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_REQUIREMENTS, true));
+        });
+    }
+
+    public static void milestoneLevelUp(ItemStack itemStack, Level world, MilestoneLevel milestoneLevel) {
+        speakToOwner(itemStack, world, "ml_reached." + milestoneLevel.name(), 0, Component.literal(String.valueOf(milestoneLevel.level())));
+
+        Utils.withAwakenedItemData(itemStack, awakenedItemData ->
+                itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData
+                        .withXp(awakenedItemData.xp() - getRequiredXp(awakenedItemData.level()))
+                        .withLevel(awakenedItemData.level() + 1)
+                        .withFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_XP, false)
+                        .withFlagSet(AwakenedItemData.Flags.Flag.MILESTONE_REQUIREMENTS, false))
+        );
+        addXp(itemStack, 0, world);
     }
 
     public static void inventoryTick(ItemStack itemStack, LivingEntity entity) {
