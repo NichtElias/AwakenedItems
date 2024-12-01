@@ -53,4 +53,4 @@ In arbitrary order.
 - more situations in which the items talk
 - item messages dependent on item type
 - more interesting item awakening
-- milestone levels that have special requirements 
+- mod compatibility
