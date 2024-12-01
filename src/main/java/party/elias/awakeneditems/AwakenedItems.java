@@ -113,6 +113,7 @@ public class AwakenedItems {
         ATTACHMENT_TYPES.register(modEventBus);
         ATTRIBUTES.register(modEventBus);
         BLOCK_ENTITY_TYPES.register(modEventBus);
+        ENTITY_SUB_PREDICATES.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 

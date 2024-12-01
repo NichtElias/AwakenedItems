@@ -8,7 +8,7 @@
           "type_specific": {
             "type": "awakeneditems:living",
             "attributes": {
-              "minecraft:max_health": {
+              "minecraft:generic.max_health": {
                 "min": 40
               }
             }
