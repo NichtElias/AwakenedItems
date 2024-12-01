@@ -6,12 +6,8 @@
     "III"
   ],
   "key": {
-    "S": {
-      "item": "awakeneditems:soulstuff"
-    },
-    "I": {
-      "item": "minecraft:iron_ingot"
-    }
+    "S": "awakeneditems:soulstuff",
+    "I": "minecraft:iron_ingot"
   },
   "result": {
     "id": "awakeneditems:soulforge"
