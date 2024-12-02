@@ -4,6 +4,7 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -142,5 +143,9 @@ public class Utils {
         for (String s: progress.getCompletedCriteria()) {
             player.getAdvancements().revoke(advancementHolder, s);
         }
+    }
+
+    public static boolean advancementExists(ResourceLocation resourceLocation) {
+        return CommonGameEvents.SERVER.getAdvancements().get(resourceLocation) != null;
     }
 }
