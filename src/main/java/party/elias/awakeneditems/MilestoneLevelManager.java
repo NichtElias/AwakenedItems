@@ -11,6 +11,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,20 +22,32 @@ public class MilestoneLevelManager extends SimplePreparableReloadListener<Void> 
     private static MilestoneLevelManager INSTANCE = null;
 
     private final RegistryAccess registryAccess;
+    private boolean validated = false;
 
     private MilestoneLevelManager(RegistryAccess registryAccess) {
         this.registryAccess = registryAccess;
     }
 
     public static MilestoneLevelManager init(RegistryAccess registryAccess) {
-        if (INSTANCE == null) {
-            INSTANCE = new MilestoneLevelManager(registryAccess);
-        }
+        INSTANCE = new MilestoneLevelManager(registryAccess);
         return INSTANCE;
     }
 
     public static Registry<MilestoneLevel> getRegistry() {
         return INSTANCE.registryAccess.registryOrThrow(AwakenedItems.MILESTONE_LEVEL_REGISTRY_KEY);
+    }
+
+    public static void checkValidity() {
+        if (!INSTANCE.validated) {
+            if (!FMLEnvironment.production) {
+                getRegistry().forEach(milestoneLevel -> {
+                    if (!Utils.advancementExists(milestoneLevel.trigger())) {
+                        throw new IllegalStateException("Invalid trigger '%s' for milestone level '%s'".formatted(milestoneLevel.trigger(), milestoneLevel));
+                    }
+                });
+            }
+            INSTANCE.validated = true;
+        }
     }
 
     public static void triggerAll(AdvancementHolder advancement, Player player) {
@@ -110,6 +123,6 @@ public class MilestoneLevelManager extends SimplePreparableReloadListener<Void> 
 
     @Override
     protected void apply(Void object, ResourceManager resourceManager, ProfilerFiller profiler) {
-
+        validated = false;
     }
 }
