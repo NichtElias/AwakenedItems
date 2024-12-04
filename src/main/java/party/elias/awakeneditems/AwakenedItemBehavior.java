@@ -8,6 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -118,19 +119,39 @@ public class AwakenedItemBehavior {
         addXp(itemStack, 0, world);
     }
 
-    public static void inventoryTick(ItemStack itemStack, LivingEntity entity) {
-        AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+    public static boolean isOwner(AwakenedItemData awakenedItemData, LivingEntity entity) {
+        return entity.getUUID().equals(awakenedItemData.owner());
+    }
 
-        awakenedItemData = awakenedItemData.withHeldByOwner(entity.getUUID().equals(awakenedItemData.owner()));
+    public static boolean isOwner(ItemStack itemStack, LivingEntity entity) {
+        return Utils.checkAwakenedItem(itemStack, awakenedItemData -> isOwner(awakenedItemData, entity));
+    }
+
+    public static void inventoryTick(ItemStack itemStack, LivingEntity entity, OmniSlot slot) {
+        AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+        assert awakenedItemData != null;
+
+        awakenedItemData = awakenedItemData.withHeldByOwner(isOwner(awakenedItemData, entity));
         itemStack.set(AwakenedItems.AWAKENED_ITEM_COMPONENT, awakenedItemData);
 
-        if (awakenedItemData.heldByOwner()) {
+        if (isOwner(awakenedItemData, entity)) {
             IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
 
             if (energyStorage != null) {
                 energyStorage.receiveEnergy(Mth.square(awakenedItemData.level() + 1), false);
             }
+        }
 
+        if (entity.level() instanceof ServerLevel) {
+            maybeSpeakToOwner(0.0005, itemStack, entity.level(), "random", 10000);
+        }
+    }
+
+    public static void equipmentTick(ItemStack itemStack, LivingEntity entity, OmniSlot slot) {
+        AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
+        assert awakenedItemData != null;
+
+        if (isOwner(awakenedItemData, entity)) {
             if (AwakenedItemType.CURIO.checkItemOnly(itemStack)) {
                 if (entity.level().getGameTime() % 100 == 0) {
                     addXp(itemStack, Config.Level.xpPerCurioHectotick, entity.level());
@@ -138,10 +159,8 @@ public class AwakenedItemBehavior {
             }
         }
 
-        if (entity.level() instanceof ServerLevel serverLevel) {
-            maybeSpeakToOwner(0.0005, itemStack, entity.level(), "random", 10000);
-
-            if (!entity.getUUID().equals(awakenedItemData.owner()) && Math.random() < 0.05) {
+        if (entity.level() instanceof ServerLevel) {
+            if (!isOwner(awakenedItemData, entity) && Math.random() < 0.05) {
                 entity.hurt(new DamageSource(entity.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)),
                         1 + ((float) awakenedItemData.level() / 2));
             }

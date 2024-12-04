@@ -70,7 +70,7 @@ public class MilestoneLevelManager extends SimplePreparableReloadListener<Void> 
                                 }
                             }
                         } else {
-                            Utils.forAllAwakenedItemsOnEntity(player, (itemStack, livingEntity) -> {
+                            Utils.forAllAwakenedItemsOnEntity(player, (itemStack, livingEntity, slot) -> {
                                 Utils.withAwakenedItemData(itemStack, awakenedItemData -> {
                                     if (milestoneLevel.itemType().checkItem(itemStack) && awakenedItemData.level() + 1 == milestoneLevel.level()
                                             && awakenedItemData.xp() >= AwakenedItemBehavior.getRequiredXp(awakenedItemData.level())) {
