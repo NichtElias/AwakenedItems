@@ -294,7 +294,7 @@ public class CommonGameEvents {
 
     @SubscribeEvent
     public static void onChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-        Utils.forAllAwakenedItemsOnEntity(event.getEntity(), (stack, entity) -> {
+        Utils.forAllAwakenedItemsOnEntity(event.getEntity(), (stack, entity, slot) -> {
             AwakenedItemBehavior.speakToOwner(stack, entity.level(), "dimchange", 200, Component.translatable(
                     "dimension." + event.getTo().location().toLanguageKey()
             ));
@@ -305,7 +305,7 @@ public class CommonGameEvents {
     public static void onLivingChangeTargetEvent(LivingChangeTargetEvent event) {
         if (event.getEntity() instanceof Monster monster && event.getNewAboutToBeSetTarget() instanceof Player player
                 && (monster.getTarget() == null || !monster.getTarget().equals(player))) {
-            Utils.forAllAwakenedItemsOnEntity(player, (item, entity) -> {
+            Utils.forAllAwakenedItemsOnEntity(player, (item, entity, slot) -> {
                 if (!player.level().isClientSide()) {
                     if (entity instanceof Creeper) {
                         AwakenedItemBehavior.maybeSpeakToOwner(0.5, item, entity.level(), "mobtarget", 50, Component.translatable(monster.getType().getDescriptionId()));
@@ -350,6 +350,7 @@ public class CommonGameEvents {
         Entity entity = event.getEntity();
         if (entity instanceof LivingEntity living) {
             Utils.forAllAwakenedItemsOnEntity(living, AwakenedItemBehavior::inventoryTick);
+            Utils.forAllEquippedAwakenedItems(living, AwakenedItemBehavior::equipmentTick);
 
             if (living instanceof Player player) {
                 player.setData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT,

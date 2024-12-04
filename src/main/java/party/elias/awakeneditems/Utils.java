@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -20,12 +21,12 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.apache.logging.log4j.util.TriConsumer;
 import party.elias.awakeneditems.compat.CuriosCompat;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -47,7 +48,7 @@ public class Utils {
         return l.get((int)((double)l.size() * Math.random()));
     }
 
-    public static void forAllAwakenedItemsOnEntity(LivingEntity entity, BiConsumer<ItemStack, LivingEntity> consumer) {
+    public static void forAllAwakenedItemsOnEntity(LivingEntity entity, TriConsumer<ItemStack, LivingEntity, OmniSlot> consumer) {
         IItemHandler cap = entity.getCapability(Capabilities.ItemHandler.ENTITY);
 
         if (cap != null) {
@@ -55,13 +56,27 @@ public class Utils {
                 ItemStack stack = cap.getStackInSlot(i);
 
                 if (stack.has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
-                    consumer.accept(stack, entity);
+                    consumer.accept(stack, entity, OmniSlot.capability(i));
                 }
             }
         }
 
         if (ModList.get().isLoaded("curios")) {
-            CuriosCompat.forAllAwakenedItemsOnEntity(entity, consumer);
+            CuriosCompat.forEquippedCurios(entity, consumer);
+        }
+    }
+
+    public static void forAllEquippedAwakenedItems(LivingEntity entity, TriConsumer<ItemStack, LivingEntity, OmniSlot> consumer) {
+        for (EquipmentSlot slot: EquipmentSlot.values()) {
+            ItemStack item = entity.getItemBySlot(slot);
+
+            if (item.has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
+                consumer.accept(item, entity, OmniSlot.equipment(slot));
+            }
+        }
+
+        if (ModList.get().isLoaded("curios")) {
+            CuriosCompat.forEquippedCurios(entity, consumer);
         }
     }
 
