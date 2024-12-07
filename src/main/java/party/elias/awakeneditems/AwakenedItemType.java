@@ -5,7 +5,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Tool;
-import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.ArrayList;
@@ -34,7 +33,10 @@ public enum AwakenedItemType implements StringRepresentable {
             item.is(Tags.Items.TOOLS_FISHING_ROD)
     ),
     CURIO(5, Set.of(), item ->
-            item.is(AwakenedItems.TAG_CURIOS)
+            item.is(AwakenedItems.CURIOS_TAG)
+    ),
+    GLIDER(5, Set.of(), item ->
+            item.is(AwakenedItems.GLIDERS_TAG)
     );
 
 

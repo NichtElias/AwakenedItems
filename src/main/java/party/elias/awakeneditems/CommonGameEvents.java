@@ -126,7 +126,16 @@ public class CommonGameEvents {
                             EquipmentSlotGroup.MAINHAND
                     );
                 }
+                if (AwakenedItemType.GLIDER.checkItem(item)) {
 
+                    event.addModifier(AwakenedItems.GLIDER_EFFICIENCY_ATTRIBUTE, new AttributeModifier(
+                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
+                                    (double) aiData.level() / 20.0 * Utils.getOwnerPower(item),
+                                    AttributeModifier.Operation.ADD_VALUE
+                            ),
+                            EquipmentSlotGroup.ARMOR
+                    );
+                }
             }
         }
     }

@@ -37,21 +37,28 @@ public class CuriosEvents {
                             continue;
 
                         event.addModifier(modifierEntry.getKey(), new AttributeModifier(
-                                        ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "curio." + modifierEntry.getValue().id().toLanguageKey()),
-                                        (double) aiData.level() / 10.0 * modifierEntry.getValue().amount() * Utils.getOwnerPower(item),
-                                        modifierEntry.getValue().operation()
-                                )
-                        );
+                                ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "curio." + modifierEntry.getValue().id().toLanguageKey()),
+                                (double) aiData.level() / 10.0 * modifierEntry.getValue().amount() * Utils.getOwnerPower(item),
+                                modifierEntry.getValue().operation()
+                        ));
 
                     }
 
                     event.addModifier(AwakenedItems.AI_POWER_ATTRIBUTE, new AttributeModifier(
-                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai." + BuiltInRegistries.ITEM.getKey(item.getItem()).getPath()),
-                                    (double) aiData.level() / 50.0,
-                                    AttributeModifier.Operation.ADD_MULTIPLIED_BASE
-                            )
-                    );
+                            ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai." + BuiltInRegistries.ITEM.getKey(item.getItem()).getPath()),
+                            (double) aiData.level() / 50.0,
+                            AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                    ));
 
+                }
+
+                if (AwakenedItemType.GLIDER.checkItem(item)) {
+
+                    event.addModifier(AwakenedItems.GLIDER_EFFICIENCY_ATTRIBUTE, new AttributeModifier(
+                            ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
+                            (double) aiData.level() / 20.0 * Utils.getOwnerPower(item),
+                            AttributeModifier.Operation.ADD_VALUE
+                    ));
                 }
             }
         }
