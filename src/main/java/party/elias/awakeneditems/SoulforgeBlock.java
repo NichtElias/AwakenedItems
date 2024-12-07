@@ -10,6 +10,7 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -21,11 +22,20 @@ import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public class SoulforgeBlock extends Block implements EntityBlock {
+
+    private static final VoxelShape SHAPE = Shapes.or(
+            Shapes.box(0, 12.0/16.0, 0, 1, 1, 1),
+            Shapes.box(2.0/16.0, 10.0/16.0, 2.0/16.0, 14.0/16.0, 12.0/16.0, 14.0/16.0),
+            Shapes.box(4.0/16.0, 2.0/16.0, 4.0/16.0, 12.0/16.0, 10.0/16.0, 12.0/16.0),
+            Shapes.box(2.0/16.0, 0, 2.0/16.0, 14.0/16.0, 2.0/16.0, 14.0/16.0));
 
     public SoulforgeBlock() {
         super(BlockBehaviour.Properties.of().destroyTime(10).explosionResistance(10).sound(SoundType.ANVIL).noOcclusion());
@@ -87,5 +97,10 @@ public class SoulforgeBlock extends Block implements EntityBlock {
         }
 
         super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 }
