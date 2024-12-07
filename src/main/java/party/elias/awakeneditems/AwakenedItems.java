@@ -19,9 +19,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -53,7 +51,9 @@ public class AwakenedItems {
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final TagKey<Item> TAG_CURIOS = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "curios"));
+    public static final TagKey<Item> CURIOS_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "curios"));
+
+    public static final TagKey<Item> GLIDERS_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "gliders"));
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
 
@@ -93,6 +93,9 @@ public class AwakenedItems {
 
     public static final DeferredHolder<Attribute, Attribute> AI_POWER_ATTRIBUTE = ATTRIBUTES.register("ai_power",
             () -> new RangedAttribute("attribute." + MODID + ".ai_power", 1, -Double.MAX_VALUE, Double.MAX_VALUE).setSyncable(true));
+
+    public static final DeferredHolder<Attribute, Attribute> GLIDER_EFFICIENCY_ATTRIBUTE = ATTRIBUTES.register("glider_efficiency",
+            () -> new RangedAttribute("attribute." + MODID + ".glider_efficiency", 1, 0, Double.MAX_VALUE).setSyncable(true));
 
     public static final Supplier<BlockEntityType<SoulforgeBlockEntity>> SOULFORGE_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register("soulforge",
             () -> new BlockEntityType<>(
@@ -157,6 +160,7 @@ public class AwakenedItems {
         public static void entityAttributeModification(EntityAttributeModificationEvent event) {
             for (EntityType<? extends LivingEntity> entityType: event.getTypes()) {
                 event.add(entityType, AI_POWER_ATTRIBUTE);
+                event.add(entityType, GLIDER_EFFICIENCY_ATTRIBUTE);
             }
         }
 

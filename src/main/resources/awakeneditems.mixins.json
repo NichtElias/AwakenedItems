@@ -6,6 +6,7 @@
   "refmap": "awakeneditems.refmap.json",
   "mixins": [
     "ItemStackMixin",
+    "LivingEntityMixin",
     "PlayerMixin",
     "ThrownTridentMixin"
   ],

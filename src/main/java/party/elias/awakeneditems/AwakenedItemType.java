@@ -33,7 +33,10 @@ public enum AwakenedItemType implements StringRepresentable {
             item.is(Tags.Items.TOOLS_FISHING_ROD)
     ),
     CURIO(5, Set.of(), item ->
-            item.is(AwakenedItems.TAG_CURIOS)
+            item.is(AwakenedItems.CURIOS_TAG)
+    ),
+    GLIDER(5, Set.of(), item ->
+            item.is(AwakenedItems.GLIDERS_TAG)
     );
 
 
