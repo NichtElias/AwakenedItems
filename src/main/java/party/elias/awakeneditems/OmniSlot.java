@@ -34,7 +34,7 @@ public record OmniSlot (SlotType type, int index, String curioIdentifier) {
     public enum SlotType {
         EQUIPMENT((slot, entity, stack) -> {
             EquipmentSlot equipmentSlot = EquipmentSlot.values()[slot.index];
-            return EquipmentSlotGroup.HAND.test(equipmentSlot) || stack.canEquip(equipmentSlot, entity);
+            return stack.canEquip(equipmentSlot, entity);
         }),
         CAPABILITY((slot, entity, stack) -> {
             IItemHandler cap = entity.getCapability(Capabilities.ItemHandler.ENTITY);

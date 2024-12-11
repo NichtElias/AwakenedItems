@@ -11,25 +11,6 @@ public class Config {
 
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    /*
-    private static final ModConfigSpec.BooleanValue LOG_DIRT_BLOCK = BUILDER
-            .comment("Whether to log the dirt block on common setup")
-            .define("logDirtBlock", true);
-
-    private static final ModConfigSpec.IntValue MAGIC_NUMBER = BUILDER
-            .comment("A magic number")
-            .defineInRange("magicNumber", 42, 0, Integer.MAX_VALUE);
-
-    public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
-            .comment("What you want the introduction message to be for the magic number")
-            .define("magicNumberIntroduction", "The magic number is... ");
-
-    // a list of strings that are treated as resource locations for items
-    private static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
-            .comment("A list of items to log on common setup.")
-            .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
-     */
-
     private static final ModConfigSpec.IntValue LEVEL_XP_BASE;
     private static final ModConfigSpec.DoubleValue LEVEL_XP_MULTIPLIER;
 
@@ -40,6 +21,7 @@ public class Config {
     private static final ModConfigSpec.IntValue LEVEL_XP_PER_ARMOR_HIT;
     private static final ModConfigSpec.IntValue LEVEL_XP_PER_FISH;
     private static final ModConfigSpec.IntValue LEVEL_XP_PER_CURIO_HECTOTICK;
+    private static final ModConfigSpec.IntValue LEVEL_XP_PER_GLIDER_HECTOTICK;
 
     static final ModConfigSpec SPEC;
 
@@ -74,6 +56,9 @@ public class Config {
         LEVEL_XP_PER_CURIO_HECTOTICK = BUILDER.comment("The amount of xp a curio gains every 100 ticks while in the owner's inventory")
                 .translation(TL_KEY + "level.xpPerCurioHectotick")
                 .defineInRange("xpPerCurioHectotick", 2, 0, Integer.MAX_VALUE);
+        LEVEL_XP_PER_GLIDER_HECTOTICK = BUILDER.comment("The amount of xp a glider (elytra, etc.) gains every 100 ticks while flying")
+                .translation(TL_KEY + "level.xpPerGliderHectotick")
+                .defineInRange("xpPerGliderHectotick", 4, 0, Integer.MAX_VALUE);
 
         BUILDER.pop();
 
@@ -91,19 +76,8 @@ public class Config {
         public static int xpPerArmorHit;
         public static int xpPerFish;
         public static int xpPerCurioHectotick;
+        public static int xpPerGliderHectotick;
     }
-
-    /*
-    public static boolean logDirtBlock;
-    public static int magicNumber;
-    public static String magicNumberIntroduction;
-    public static Set<Item> items;
-
-    private static boolean validateItemName(final Object obj)
-    {
-        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(itemName));
-    }
-     */
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
@@ -118,16 +92,7 @@ public class Config {
         Level.xpPerArmorHit = LEVEL_XP_PER_ARMOR_HIT.get();
         Level.xpPerFish = LEVEL_XP_PER_FISH.get();
         Level.xpPerCurioHectotick = LEVEL_XP_PER_CURIO_HECTOTICK.get();
+        Level.xpPerGliderHectotick = LEVEL_XP_PER_GLIDER_HECTOTICK.get();
 
-        /*
-        logDirtBlock = LOG_DIRT_BLOCK.get();
-        magicNumber = MAGIC_NUMBER.get();
-        magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();
-
-        // convert the list of strings into a set of items
-        items = ITEM_STRINGS.get().stream()
-                .map(itemName -> BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemName)))
-                .collect(Collectors.toSet());
-         */
     }
 }
