@@ -158,6 +158,12 @@ public class AwakenedItemBehavior {
                     addXp(itemStack, Config.Level.xpPerCurioHectotick, entity.level());
                 }
             }
+
+            if (entity.isFallFlying() && AwakenedItemType.GLIDER.checkItem(itemStack) && slot.isForItem(entity, itemStack)) {
+                if (entity.level().getGameTime() % 100 == 0) {
+                    addXp(itemStack, Config.Level.xpPerGliderHectotick, entity.level());
+                }
+            }
         }
 
         if (entity.level() instanceof ServerLevel serverLevel) {
