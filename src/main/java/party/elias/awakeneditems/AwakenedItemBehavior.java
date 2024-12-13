@@ -158,7 +158,7 @@ public class AwakenedItemBehavior {
                 }
             }
 
-            if (entity.isFallFlying() && AwakenedItemType.GLIDER.checkItem(itemStack) && slot.isForItem(entity, itemStack)) {
+            if (entity.isFallFlying() && itemStack.canElytraFly(entity) && slot.isForItem(entity, itemStack)) {
                 if (entity.level().getGameTime() % 100 == 0) {
                     addXp(itemStack, Config.Level.xpPerGliderHectotick, entity.level());
                 }

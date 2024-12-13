@@ -53,8 +53,6 @@ public class AwakenedItems {
 
     public static final TagKey<Item> CURIOS_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "curios"));
 
-    public static final TagKey<Item> GLIDERS_TAG = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MODID, "gliders"));
-
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
 
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);

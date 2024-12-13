@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +16,8 @@ import party.elias.awakeneditems.Utils;
 import top.theillusivec4.curios.api.event.CurioAttributeModifierEvent;
 
 import java.util.Map;
+
+import static party.elias.awakeneditems.CommonGameEvents.SERVER;
 
 public class CuriosEvents {
 
@@ -52,13 +55,16 @@ public class CuriosEvents {
 
                 }
 
-                if (AwakenedItemType.GLIDER.checkItem(item)) {
+                ServerPlayer owner = Utils.getPlayerByUUIDFromServer(SERVER, aiData.owner());
+                if (owner != null) {
+                    if (item.canElytraFly(owner)) {
 
-                    event.addModifier(AwakenedItems.GLIDER_EFFICIENCY_ATTRIBUTE, new AttributeModifier(
-                            ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
-                            (double) aiData.level() / 20.0 * Utils.getOwnerPower(item),
-                            AttributeModifier.Operation.ADD_VALUE
-                    ));
+                        event.addModifier(AwakenedItems.GLIDER_EFFICIENCY_ATTRIBUTE, new AttributeModifier(
+                                ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
+                                (double) aiData.level() / 20.0 * Utils.getOwnerPower(item),
+                                AttributeModifier.Operation.ADD_VALUE
+                        ));
+                    }
                 }
             }
         }
