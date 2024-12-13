@@ -22,6 +22,7 @@
   "awakeneditems.configuration.level.xpPerArmorHit": "XP per armor hit",
   "awakeneditems.configuration.level.xpPerFish": "XP per fished item",
   "awakeneditems.configuration.level.xpPerCurioHectotick": "XP per 100 ticks for curios",
+  "awakeneditems.configuration.level.xpPerGliderHectotick": "XP per 100 ticks of flight",
 
   "chat.awakeneditems.aimsg.ml_xp.any_t1.any.any": "Before I can advance further, we need to travel to the nether.",
   "chat.awakeneditems.aimsg.ml_xp.any_t2.any.any": "Before I can advance further, we need to travel to the end.",
