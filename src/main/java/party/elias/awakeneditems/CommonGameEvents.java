@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -127,15 +128,19 @@ public class CommonGameEvents {
                             EquipmentSlotGroup.MAINHAND
                     );
                 }
-                if (AwakenedItemType.GLIDER.checkItem(item)) {
 
-                    event.addModifier(AwakenedItems.GLIDER_EFFICIENCY_ATTRIBUTE, new AttributeModifier(
-                                    ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
-                                    (double) aiData.level() / 20.0 * Utils.getOwnerPower(item),
-                                    AttributeModifier.Operation.ADD_VALUE
-                            ),
-                            EquipmentSlotGroup.ARMOR
-                    );
+                ServerPlayer owner = Utils.getPlayerByUUIDFromServer(SERVER, aiData.owner());
+                if (owner != null) {
+                    if (item.canElytraFly(owner)) {
+
+                        event.addModifier(AwakenedItems.GLIDER_EFFICIENCY_ATTRIBUTE, new AttributeModifier(
+                                        ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),
+                                        (double) aiData.level() / 20.0 * Utils.getOwnerPower(item),
+                                        AttributeModifier.Operation.ADD_VALUE
+                                ),
+                                EquipmentSlotGroup.ARMOR
+                        );
+                    }
                 }
             }
         }

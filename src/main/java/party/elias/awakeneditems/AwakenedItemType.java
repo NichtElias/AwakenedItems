@@ -34,9 +34,6 @@ public enum AwakenedItemType implements StringRepresentable {
     ),
     CURIO(5, Set.of(), item ->
             item.is(AwakenedItems.CURIOS_TAG)
-    ),
-    GLIDER(5, Set.of(), item ->
-            item.is(AwakenedItems.GLIDERS_TAG)
     );
 
 
