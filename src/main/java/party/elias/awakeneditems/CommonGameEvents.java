@@ -294,10 +294,8 @@ public class CommonGameEvents {
             ItemStack item = event.getTo();
 
             AwakenedItemData aiData = item.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
-            AwakenedItemData prevAIData = event.getFrom().get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
-            // TODO: if I ever give awakened items a uuid, use that to compare to the previous ItemStack instead of personality
-            if (aiData != null && (prevAIData == null || !prevAIData.personality().equals(aiData.personality()))) {
+            if (aiData != null && ItemStack.isSameItemSameComponents(item, event.getFrom())) {
                 AwakenedItemBehavior.speakToOwner(item, event.getEntity().level(), "mobpickup", 20, Component.translatable(event.getEntity().getType().getDescriptionId()));
             }
         }
