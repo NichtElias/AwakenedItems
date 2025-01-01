@@ -31,6 +31,7 @@ Generally the following items should work just as you'd expect:
 - Tridents
 - Shields
 - Fishing rods
+- Elytra
 
 Additionally:
 
@@ -52,5 +53,6 @@ In arbitrary order.
 - more personalities
 - more situations in which the items talk
 - item messages dependent on item type
+- rework of the personality/talking item system
 - more interesting item awakening
 - mod compatibility
