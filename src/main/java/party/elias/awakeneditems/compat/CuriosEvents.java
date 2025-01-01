@@ -2,6 +2,7 @@ package party.elias.awakeneditems.compat;
 
 import com.google.common.collect.Multimap;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -57,7 +58,7 @@ public class CuriosEvents {
 
                 ServerPlayer owner = Utils.getPlayerByUUIDFromServer(SERVER, aiData.owner());
                 if (owner != null) {
-                    if (item.canElytraFly(owner)) {
+                    if (item.has(DataComponents.GLIDER)) {
 
                         event.addModifier(AwakenedItems.GLIDER_EFFICIENCY_ATTRIBUTE, new AttributeModifier(
                                 ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),

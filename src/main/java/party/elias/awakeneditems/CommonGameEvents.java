@@ -131,7 +131,7 @@ public class CommonGameEvents {
 
                 ServerPlayer owner = Utils.getPlayerByUUIDFromServer(SERVER, aiData.owner());
                 if (owner != null) {
-                    if (item.canElytraFly(owner)) {
+                    if (item.has(DataComponents.GLIDER)) {
 
                         event.addModifier(AwakenedItems.GLIDER_EFFICIENCY_ATTRIBUTE, new AttributeModifier(
                                         ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "ai"),

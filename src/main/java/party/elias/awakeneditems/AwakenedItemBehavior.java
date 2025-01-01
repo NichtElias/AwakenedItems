@@ -1,5 +1,6 @@
 package party.elias.awakeneditems;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -159,7 +160,7 @@ public class AwakenedItemBehavior {
                 }
             }
 
-            if (entity.isFallFlying() && itemStack.canElytraFly(entity) && slot.isForItem(entity, itemStack)) {
+            if (entity.isFallFlying() && itemStack.has(DataComponents.GLIDER) && slot.isForItem(entity, itemStack)) {
                 if (entity.level().getGameTime() % 100 == 0) {
                     addXp(itemStack, Config.Level.xpPerGliderHectotick, entity.level());
                 }
