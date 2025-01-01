@@ -10,7 +10,7 @@ import party.elias.awakeneditems.AwakenedItems;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
-    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 2))
+    @WrapOperation(method = "updateFallFlyingMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 1))
     private Vec3 modify(Vec3 instance, double x, double y, double z, Operation<Vec3> original) {
         LivingEntity living = (LivingEntity)(Object)this;
 
