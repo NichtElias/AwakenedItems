@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "test1": {
+      "criteria": {
+        "awakeneditems:item_damage": 2
+      }
+    }
+  }
+}
