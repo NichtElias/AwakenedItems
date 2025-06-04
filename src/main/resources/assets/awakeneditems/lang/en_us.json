@@ -5,6 +5,9 @@
   "ai.awakeneditems.tooltip": "Awakened [%s]",
   "ai.awakeneditems.tooltip.owner": "Bound to %s",
   "attribute.awakeneditems.ai_power": "Awakened Item Power",
+  "attribute.awakeneditems.ai_power.desc": "Increases the buffs from awakened items.",
+  "attribute.awakeneditems.glider_efficiency": "Gliding Efficiency",
+  "attribute.awakeneditems.glider_efficiency.desc": "Reduces the loss of altitude when in elytra-like flight.",
 
   "tag.item.awakeneditems.curios": "Curios",
   "emi.info.awakeneditems.awakening": "Any item can be awakened by dropping it on an anvil and then using soulstuff on the anvil.",
