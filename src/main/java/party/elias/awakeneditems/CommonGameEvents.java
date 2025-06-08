@@ -348,6 +348,15 @@ public class CommonGameEvents {
     }
 
     @SubscribeEvent
+    public static void onPlayerEnchantItem(PlayerEnchantItemEvent event) {
+
+        ItemStack itemStack = event.getEnchantedItem();
+        if (Utils.checkAwakenedItem(itemStack)) {
+            AwakenedItemBehavior.speakToOwner(itemStack, event.getEntity().level(), "enchanted", 600);
+        }
+    }
+
+    @SubscribeEvent
     public static void onAdvancementProgress(AdvancementEvent.AdvancementProgressEvent event) {
 
         if (event.getAdvancementProgress().isDone()) {
