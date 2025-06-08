@@ -2,7 +2,9 @@ package party.elias.awakeneditems;
 
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -140,10 +142,23 @@ public class Utils {
         return false;
     }
 
-    public static void soulPuff(Level level, Vec3 pos) {
-        for (int i = 0; i < 20; i++) {
-            level.addParticle(ParticleTypes.SOUL, pos.x, pos.y, pos.z, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05);
+    public static void soulPuff(ClientLevel level, Vec3 pos) {
+        addParticlesCentered(level, ParticleTypes.SOUL, pos, Vec3.ZERO, 20, Vec3.ZERO, new Vec3(0.05, 0.05, 0.05));
+        //for (int i = 0; i < 20; i++) {
+        //    level.addParticle(ParticleTypes.SOUL, pos.x, pos.y, pos.z, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05, Math.random() / 10 - 0.05);
+        //}
+    }
+
+    public static void addParticles(ClientLevel level, ParticleOptions particle, Vec3 pos, Vec3 spread, int amount, Vec3 speed, Vec3 speedSpread) {
+        for (int i = 0; i < amount; i++) {
+            level.addParticle(particle, pos.x + (Math.random() * spread.x), pos.y + (Math.random() * spread.y), pos.z + (Math.random() * spread.z),
+                    speed.x + (Math.random() * speedSpread.x), speed.y + (Math.random() * speedSpread.y), speed.z + (Math.random() * speedSpread.z));
         }
+    }
+
+    public static void addParticlesCentered(ClientLevel level, ParticleOptions particle, Vec3 pos, Vec3 spread, int amount, Vec3 speed, Vec3 speedSpread) {
+        // spread doesn't need to be halved, because in this method it acts as distance from center in all directions
+        addParticles(level, particle, pos.subtract(spread), spread.scale(2), amount, speed.subtract(speedSpread), speedSpread.scale(2));
     }
 
     public static void dropAt(Level level, ItemStack itemStack, Vec3 pos) {

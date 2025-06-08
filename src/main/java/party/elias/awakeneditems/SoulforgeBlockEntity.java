@@ -1,5 +1,6 @@
 package party.elias.awakeneditems;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -80,9 +81,12 @@ public class SoulforgeBlockEntity extends BlockEntity {
         AwakenedItemBehavior.milestoneLevelUp(awakened, getLevel(), MilestoneLevelManager.getFor(awakened));
 
         Utils.dropAt(getLevel(), awakened, getBlockPos().getCenter().add(0, 1, 0));
-        Utils.soulPuff(getLevel(), getBlockPos().getCenter().add(0, 1, 0));
-        getLevel().playLocalSound(getBlockPos(), SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.75f, 1, false);
-        getLevel().playLocalSound(getBlockPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1, 1, false);
+
+        if (getLevel() instanceof ClientLevel clientLevel) {
+            Utils.soulPuff(clientLevel, getBlockPos().getCenter().add(0, 1, 0));
+            clientLevel.playLocalSound(getBlockPos(), SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.75f, 1, false);
+            clientLevel.playLocalSound(getBlockPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1, 1, false);
+        }
     }
 
     public List<ItemStack> getItems() {

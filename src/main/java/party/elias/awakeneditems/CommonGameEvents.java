@@ -1,6 +1,7 @@
 package party.elias.awakeneditems;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -159,11 +160,11 @@ public class CommonGameEvents {
                     item.shrink(1);
 
                     //  flair
-                    if (event.getLevel().isClientSide()) {
-                        Utils.soulPuff(event.getLevel(), itemEntity.getPosition(1).add(0, 0.25, 0));
+                    if (event.getLevel() instanceof ClientLevel clientLevel) {
+                        Utils.soulPuff(clientLevel, itemEntity.getPosition(1).add(0, 0.25, 0));
 
-                        event.getLevel().playLocalSound(event.getPos(), SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.75f, 1, false);
-                        event.getLevel().playLocalSound(event.getPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1, 1, false);
+                        clientLevel.playLocalSound(event.getPos(), SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.75f, 1, false);
+                        clientLevel.playLocalSound(event.getPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1, 1, false);
                     }
 
                     event.getEntity().hurt(new DamageSource(event.getLevel().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)

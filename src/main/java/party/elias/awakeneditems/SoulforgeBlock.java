@@ -1,27 +1,24 @@
 package party.elias.awakeneditems;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -56,8 +53,10 @@ public class SoulforgeBlock extends Block implements EntityBlock {
             if (rest != stack.getCount()) {
                 stack.setCount(rest);
 
-                Utils.soulPuff(level, pos.getCenter().add(0, 0.6, 0));
-                level.playLocalSound(pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1, false);
+                if (level instanceof ClientLevel clientLevel) {
+                    Utils.soulPuff(clientLevel, pos.getCenter().add(0, 0.6, 0));
+                    clientLevel.playLocalSound(pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1, 1, false);
+                }
             }
 
             return ItemInteractionResult.SUCCESS;
@@ -97,6 +96,15 @@ public class SoulforgeBlock extends Block implements EntityBlock {
         }
 
         super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (level instanceof ClientLevel clientLevel) {
+            if (Math.random() > 0.6)
+                Utils.addParticlesCentered(clientLevel, ParticleTypes.SOUL_FIRE_FLAME, pos.getCenter().add(0, 0.6, 0),
+                        new Vec3(5d/16, 0, 5d/16), 1, Vec3.ZERO, Vec3.ZERO);
+        }
     }
 
     @Override
