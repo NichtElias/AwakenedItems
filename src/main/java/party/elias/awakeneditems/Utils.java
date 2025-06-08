@@ -142,6 +142,10 @@ public class Utils {
         return false;
     }
 
+    public static boolean checkAwakenedItem(ItemStack itemStack) {
+        return checkAwakenedItem(itemStack, awakenedItemData -> true);
+    }
+
     public static void soulPuff(ClientLevel level, Vec3 pos) {
         addParticlesCentered(level, ParticleTypes.SOUL, pos, Vec3.ZERO, 20, Vec3.ZERO, new Vec3(0.05, 0.05, 0.05));
         //for (int i = 0; i < 20; i++) {

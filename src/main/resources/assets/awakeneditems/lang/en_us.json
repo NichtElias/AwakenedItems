@@ -130,5 +130,10 @@
   "chat.awakeneditems.aimsg.awaken-noname.any.lazy": "Didn't care to name me? Well, I can relate.",
   "chat.awakeneditems.aimsg.awaken-noname.any.insecure": "H-hello, you didn't pick a name for me? T-that's fine, I guess.",
   "chat.awakeneditems.aimsg.awaken-noname.any.scheming": "Hello, I suppose you're my new owner. You have no name for me? I suppose I'll just be a %s. At least for now.",
-  "chat.awakeneditems.aimsg.awaken-noname.any.merry": "Hello! I hope the binding didn't hurt too much. Oh, you haven't picked a name for me! I'm sure together we can come up with something."
+  "chat.awakeneditems.aimsg.awaken-noname.any.merry": "Hello! I hope the binding didn't hurt too much. Oh, you haven't picked a name for me! I'm sure together we can come up with something.",
+  "chat.awakeneditems.aimsg.enchanted.any.arrogant": "I can feel the power coursing through me!",
+  "chat.awakeneditems.aimsg.enchanted.any.lazy": "Nice, this'll make my job easier.",
+  "chat.awakeneditems.aimsg.enchanted.any.insecure": "Thanks for entrusting me with this enchantment.",
+  "chat.awakeneditems.aimsg.enchanted.any.scheming": "Ah, a very useful enchantment.",
+  "chat.awakeneditems.aimsg.enchanted.any.merry": "Yes! Magic! I love it."
 }
