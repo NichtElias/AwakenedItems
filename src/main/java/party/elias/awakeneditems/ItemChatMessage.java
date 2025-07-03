@@ -18,7 +18,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import java.util.Comparator;
 import java.util.List;
 
-public record ItemChatMessage(ItemStack item, String trigger, List<Component> formatArgs) implements CustomPacketPayload {
+public record ItemChatMessage(ItemStack item, String context, List<Component> formatArgs) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<ItemChatMessage> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(AwakenedItems.MODID, "item_chat_message"));
 
@@ -31,7 +31,7 @@ public record ItemChatMessage(ItemStack item, String trigger, List<Component> fo
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ItemChatMessage> STREAM_CODEC = StreamCodec.composite(
             ItemStack.STREAM_CODEC, ItemChatMessage::item,
-            ByteBufCodecs.STRING_UTF8, ItemChatMessage::trigger,
+            ByteBufCodecs.STRING_UTF8, ItemChatMessage::context,
             COMPONENT_STREAM_CODEC.apply(ByteBufCodecs.list()), ItemChatMessage::formatArgs,
             ItemChatMessage::new
     );
@@ -41,31 +41,11 @@ public record ItemChatMessage(ItemStack item, String trigger, List<Component> fo
         return TYPE;
     }
 
-    public static final String AIMSG_KEY = "chat.awakeneditems.aimsg.%s.%s.%s";
-
     public static void handle(ItemChatMessage icm, IPayloadContext context) {
 
         sendItemChatMessage(context.player(), icm);
 
     }
-
-    private static final List<List<Integer>> ICM_I18N_PRIORITY_MATRIX = List.of(
-            List.of(0, 1, 2),
-            List.of(0, 2, 1),
-            List.of(1, 0, 2),
-            List.of(1, 2, 0),
-            List.of(2, 0, 1),
-            List.of(2, 1, 0),
-            List.of(0, 1),
-            List.of(0, 2),
-            List.of(1, 0),
-            List.of(1, 2),
-            List.of(2, 0),
-            List.of(2, 1),
-            List.of(0),
-            List.of(1),
-            List.of(2)
-    );
 
     private static int checkVariants(String key) {
         int variantCount = 0;
@@ -80,39 +60,7 @@ public record ItemChatMessage(ItemStack item, String trigger, List<Component> fo
         AwakenedItemData aiData = icm.item().get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         if (aiData != null) {
-            String key = null;
-
-            List<PersonalityTrait> traits = aiData.personality();
-
-            List<AwakenedItemType> types = AwakenedItemType.getItemTypes(icm.item()).stream().sorted(Comparator.comparingInt(AwakenedItemType::getSpecificity).reversed()).toList();
-
-            for (AwakenedItemType type: types) {
-                for (List<Integer> combination :
-                        ICM_I18N_PRIORITY_MATRIX.stream().filter(l -> l.stream().max(Integer::compare).orElse(Integer.MAX_VALUE) < traits.size()).toList()) {
-
-                    String traitString = String.join("-",
-                            combination.stream().map(traits::get).map(PersonalityTrait::lower).toList());
-
-                    String k = AIMSG_KEY.formatted(icm.trigger(), type.getSerializedName(), traitString);
-
-                    if (I18n.exists(k)) {
-                        key = k;
-                        break;
-                    }
-                }
-                if (key != null) break;
-
-                String k = AIMSG_KEY.formatted(icm.trigger(), type.getSerializedName(), "any");
-
-                if (I18n.exists(k)) {
-                    key = k;
-                    break;
-                }
-            }
-
-            if (key == null) {
-                key = AIMSG_KEY.formatted(icm.trigger(), "any", "any");
-            }
+            String key = "chat.awakeneditems.aimsg.%s.%s-%s".formatted(icm.context(), aiData.personality().major().lower(), aiData.personality().minor().lower());
 
             if (I18n.exists(key)) {
                 int variantCount = checkVariants(key);

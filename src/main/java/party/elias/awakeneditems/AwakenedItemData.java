@@ -6,15 +6,13 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public record AwakenedItemData(UUID owner, int level, int xp, Flags flags, List<PersonalityTrait> personality) {
+public record AwakenedItemData(UUID owner, int level, int xp, Flags flags, Personality personality) {
 
-    public AwakenedItemData(UUID owner, List<PersonalityTrait> personality) {
+    public AwakenedItemData(UUID owner, Personality personality) {
         this(owner, 0, 0, new Flags(0), personality);
     }
 
@@ -24,7 +22,7 @@ public record AwakenedItemData(UUID owner, int level, int xp, Flags flags, List<
                     Codec.INT.fieldOf("level").forGetter(AwakenedItemData::level),
                     Codec.INT.fieldOf("xp").forGetter(AwakenedItemData::xp),
                     Flags.CODEC.optionalFieldOf("flags", new Flags(0)).forGetter(AwakenedItemData::flags),
-                    Codec.list(PersonalityTrait.CODEC).fieldOf("personality").forGetter(AwakenedItemData::personality)
+                    Personality.CODEC.fieldOf("personality").forGetter(AwakenedItemData::personality)
             ).apply(instance, AwakenedItemData::new)
     );
 
@@ -33,7 +31,7 @@ public record AwakenedItemData(UUID owner, int level, int xp, Flags flags, List<
             ByteBufCodecs.INT, AwakenedItemData::level,
             ByteBufCodecs.INT, AwakenedItemData::xp,
             Flags.STREAM_CODEC, AwakenedItemData::flags,
-            PersonalityTrait.STREAM_CODEC.apply(ByteBufCodecs.list()), AwakenedItemData::personality,
+            Personality.STREAM_CODEC, AwakenedItemData::personality,
             AwakenedItemData::new
     );
 

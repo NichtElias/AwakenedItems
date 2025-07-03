@@ -1,0 +1,2 @@
+- Rework of item personalities and item chat messages
+- New item personalities

@@ -50,6 +50,10 @@ public class Utils {
         return l.get((int)((double)l.size() * Math.random()));
     }
 
+    public static <T> T randomChoice(T[] a) {
+        return a[(int)(Math.random() * a.length)];
+    }
+
     public static void forAllAwakenedItemsOnEntity(LivingEntity entity, TriConsumer<ItemStack, LivingEntity, OmniSlot> consumer) {
         IItemHandler cap = entity.getCapability(Capabilities.ItemHandler.ENTITY);
 

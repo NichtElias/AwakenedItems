@@ -2,6 +2,8 @@ package party.elias.awakeneditems;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -33,6 +35,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -47,6 +50,7 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
+import java.util.HashSet;
 import java.util.List;
 
 @EventBusSubscriber(modid = AwakenedItems.MODID, bus = EventBusSubscriber.Bus.GAME)
@@ -156,7 +160,7 @@ public class CommonGameEvents {
 
             for (ItemEntity itemEntity: itemEntities) {
                 if (!itemEntity.getItem().has(AwakenedItems.AWAKENED_ITEM_COMPONENT)) {
-                    itemEntity.getItem().set(AwakenedItems.AWAKENED_ITEM_COMPONENT, new AwakenedItemData(event.getEntity().getUUID(), AwakenedItemBehavior.getRandomPersonality()));
+                    itemEntity.getItem().set(AwakenedItems.AWAKENED_ITEM_COMPONENT, new AwakenedItemData(event.getEntity().getUUID(), Personality.random()));
                     item.shrink(1);
 
                     //  flair
@@ -374,6 +378,23 @@ public class CommonGameEvents {
             if (living instanceof Player player) {
                 player.setData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT,
                         player.getData(AwakenedItems.AWAKENED_ITEM_PLAYER_DATA_ATTACHMENT).addTimeSinceLastItemMsg(1));
+/*
+                if (player instanceof LocalPlayer localPlayer) {
+                    int range = 5;
+                    HashSet<BlockPos> blocks = new HashSet<>();
+                    for (int x = -range; x < range; x++) {
+                        for (int y = -range; y < range; y++) {
+                            for (int z = -range; z < range; z++) {
+                                BlockPos pos = player.blockPosition().east(x).above(y).south(z);
+                                if (localPlayer.clientLevel.getBlockState(pos).is(Tags.Blocks.ORES))
+                                    blocks.add(pos);
+                            }
+                        }
+                    }
+                    ClientUtils.highlightBlocks(blocks);
+                }
+
+ */
             }
         }
     }
