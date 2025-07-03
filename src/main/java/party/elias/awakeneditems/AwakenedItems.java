@@ -1,10 +1,15 @@
 package party.elias.awakeneditems;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.advancements.critereon.EntitySubPredicate;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -32,6 +37,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
@@ -42,6 +49,7 @@ import net.neoforged.neoforge.registries.*;
 import org.slf4j.Logger;
 import party.elias.awakeneditems.compat.CuriosEvents;
 
+import java.io.IOException;
 import java.util.function.Supplier;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -69,6 +77,7 @@ public class AwakenedItems {
 
     public static final DeferredRegister<MapCodec<? extends EntitySubPredicate>> ENTITY_SUB_PREDICATES = DeferredRegister.create(Registries.ENTITY_SUB_PREDICATE_TYPE, MODID);
 
+    public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, MODID);
 
     public static final DeferredBlock<Block> SOULFORGE_BLOCK = BLOCKS.register("soulforge", SoulforgeBlock::new);
 
@@ -103,7 +112,11 @@ public class AwakenedItems {
     public static final DeferredHolder<MapCodec<? extends EntitySubPredicate>, MapCodec<LivingAttributePredicate>> LIVING_ATTRIBUTE_PREDICATE = ENTITY_SUB_PREDICATES.register("living",
             () -> LivingAttributePredicate.CODEC);
 
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> HIGHLIGHT_PARTICLE = PARTICLE_TYPES.register("highlight", () -> new SimpleParticleType(true));
+
     public static final ResourceKey<Registry<MilestoneLevel>> MILESTONE_LEVEL_REGISTRY_KEY = ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(MODID, "milestone_levels"));
+
+    public static ShaderInstance highlight_particle_shader;
 
     public AwakenedItems(IEventBus modEventBus, ModContainer modContainer) {
 
@@ -115,6 +128,7 @@ public class AwakenedItems {
         ATTRIBUTES.register(modEventBus);
         BLOCK_ENTITY_TYPES.register(modEventBus);
         ENTITY_SUB_PREDICATES.register(modEventBus);
+        PARTICLE_TYPES.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
@@ -131,6 +145,21 @@ public class AwakenedItems {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
 
+        }
+
+        @SubscribeEvent
+        public static void onRegisterParticleProviders(RegisterParticleProvidersEvent event) {
+            event.registerSpriteSet(HIGHLIGHT_PARTICLE.get(), ZeroDepthParticle.Provider::new);
+        }
+
+        @SubscribeEvent
+        public static void onRegisterShaders(RegisterShadersEvent event) {
+            try {
+                event.registerShader(new ShaderInstance(event.getResourceProvider(), ResourceLocation.fromNamespaceAndPath(MODID, "highlight_particle"), DefaultVertexFormat.PARTICLE),
+                        shaderInstance -> highlight_particle_shader = shaderInstance);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
