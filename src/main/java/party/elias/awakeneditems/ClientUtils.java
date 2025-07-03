@@ -5,9 +5,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.util.ParticleUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -15,7 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ClientUtils {
     public static Level getLevel() {
@@ -30,49 +26,6 @@ public class ClientUtils {
         double step = 1f / resolution;
         for (double d = step; d < 1; d += step) {
             addHighlightParticleAt(level, a.lerp(b, d));
-        }
-    }
-
-    public static void highlightBlock(BlockPos pos) {
-        Vec3 up = new Vec3(0, 1, 0);
-        Vec3 east = new Vec3(1, 0, 0);
-        Vec3 south = new Vec3(0, 0, 1);
-
-        ClientLevel level = Minecraft.getInstance().level;
-
-        if (level != null) {
-            Vec3 blockOrigin = new Vec3(pos.getX(), pos.getY(), pos.getZ());
-            Vec3 blockAntiOrigin = blockOrigin.add(new Vec3(1, 1, 1));
-
-            double step = 1d / 32;
-
-            //edges
-            for (double d = step; d < 1; d += step) {
-                addHighlightParticleAt(level, blockOrigin.add(up.scale(d)));
-                addHighlightParticleAt(level, blockOrigin.add(east.scale(d)));
-                addHighlightParticleAt(level, blockOrigin.add(south.scale(d)));
-
-                addHighlightParticleAt(level, blockAntiOrigin.subtract(up.scale(d)));
-                addHighlightParticleAt(level, blockAntiOrigin.subtract(east.scale(d)));
-                addHighlightParticleAt(level, blockAntiOrigin.subtract(south.scale(d)));
-
-                addHighlightParticleAt(level, blockOrigin.add(up).add(east.scale(d)));
-                addHighlightParticleAt(level, blockOrigin.add(up).add(south.scale(d)));
-                addHighlightParticleAt(level, blockOrigin.add(east).add(up.scale(d)));
-                addHighlightParticleAt(level, blockOrigin.add(south).add(up.scale(d)));
-                addHighlightParticleAt(level, blockAntiOrigin.subtract(up).subtract(east.scale(d)));
-                addHighlightParticleAt(level, blockAntiOrigin.subtract(up).subtract(south.scale(d)));
-            }
-
-            //vertices
-            addHighlightParticleAt(level, blockOrigin);
-            addHighlightParticleAt(level, blockOrigin.add(up));
-            addHighlightParticleAt(level, blockOrigin.add(east));
-            addHighlightParticleAt(level, blockOrigin.add(south));
-            addHighlightParticleAt(level, blockAntiOrigin);
-            addHighlightParticleAt(level, blockAntiOrigin.subtract(up));
-            addHighlightParticleAt(level, blockAntiOrigin.subtract(east));
-            addHighlightParticleAt(level, blockAntiOrigin.subtract(south));
         }
     }
 
