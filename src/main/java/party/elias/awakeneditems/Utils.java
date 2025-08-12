@@ -91,21 +91,22 @@ public class Utils {
         return null;
     }
 
+    public static Player getPlayerByUUID(UUID uuid) {
+        if (CommonGameEvents.SERVER != null) {
+            return getPlayerByUUIDFromServer(CommonGameEvents.SERVER, uuid);
+        }
+        Level level = ClientUtils.getLevel();
+        if (level != null) {
+            return level.getPlayerByUUID(uuid);
+        }
+        return null;
+    }
+
     public static double getOwnerPower(ItemStack itemStack) {
         AwakenedItemData awakenedItemData = itemStack.get(AwakenedItems.AWAKENED_ITEM_COMPONENT);
 
         if (awakenedItemData != null) {
-            Player player = null;
-
-            if (CommonGameEvents.SERVER != null) {
-                player = getPlayerByUUIDFromServer(CommonGameEvents.SERVER, awakenedItemData.owner());
-            } else {
-                Level level = ClientUtils.getLevel();
-
-                if (level != null) {
-                    player = level.getPlayerByUUID(awakenedItemData.owner());
-                }
-            }
+            Player player = getPlayerByUUID(awakenedItemData.owner());
 
             if (player != null) {
                 return player.getAttributeValue(AwakenedItems.AI_POWER_ATTRIBUTE);
