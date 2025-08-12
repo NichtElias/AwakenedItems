@@ -129,7 +129,7 @@ public class CommonGameEvents {
                     );
                 }
 
-                ServerPlayer owner = Utils.getPlayerByUUIDFromServer(SERVER, aiData.owner());
+                Player owner = Utils.getPlayerByUUID(aiData.owner());
                 if (owner != null) {
                     if (item.canElytraFly(owner)) {
 
